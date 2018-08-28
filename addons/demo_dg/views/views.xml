@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="todo_list_tree_view" model="ir.ui.view">
+        <field name="name">Vista Arbol Todo</field>
+        <field name="model">demo.todo_list</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="owner"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="todo_list_form_view" model="ir.ui.view">
+        <field name="name">Vista Formulario TODO</field>
+        <field name="model">demo.todo_list</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Asignar" name="assign_list" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,in_progress,closed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" options="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="owner"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tareas">
+                            <field name="task_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="hours"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notas">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="inherit_form_view_4_todo" model="ir.ui.view">
+        <field name="name">Vista Form Heredada</field>
+        <field name="model">demo.todo_list</field>
+        <field name="inherit_id" ref="todo_list_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <h1>Heredado</h1>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="main_action_demo_task_list" model="ir.actions.act_window">
+        <field name="name">Tareas</field>
+        <field name="res_model">demo.todo_list</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="root_menu_task" name="DEMO"/>
+    <menuitem id="menu_prueba_uno" name="Tareas" parent="root_menu_task"/>
+    <menuitem id="menu_tareas_lista" string="Mis Tareas" action="main_action_demo_task_list" parent="menu_prueba_uno"/>
+</odoo>
