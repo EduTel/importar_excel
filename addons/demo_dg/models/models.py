@@ -1,11 +1,32 @@
 # -*- coding: utf-8 -*-
+#!/usr/bin/python2.7
+
+import sys
+from odoo import exceptions
+import coloredlogs, logging
+from termcolor import colored
+
+
 
 
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
+logger = logging.getLogger(__name__)
+#logger.setLevel(logging.DEBUG)
+#coloredlogs.install(level='DEBUG')
+#coloredlogs.install(level='DEBUG', logger=logger)
 
 class TodoList(models.Model):
+    coloredlogs.install(level='DEBUG')
+    logger.info('====================================================0')
+    logger.warning("====================================================1")
+    logger.error("====================================================2")
+    logger.info('===================================================='+__name__)
+    
+    print colored('=================================================hello', 'red')
+    print colored('=================================================world', 'green')
+
     _name = "demo.todo_list"
 
     name = fields.Char(string="Nombre", size=50, required=True, index=True)

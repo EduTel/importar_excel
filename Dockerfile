@@ -62,6 +62,17 @@ RUN pip install pyopenssl
 RUN pip install pyqrcode
 RUN pip install pypng
 RUN pip install qrcode
+#MY ADD
+RUN apt update
+RUN apt install -y software-properties-common
+RUN apt install -y screenfetch
+RUN pip install --upgrade pip
+RUN pip install coloredlogs
+RUN pip install termcolor
+RUN apt install -y grc
+RUN apt install -y nano
+RUN pip install ipython
+RUN apt install -y net-tools
 
 # Set default user when running the container
 USER odoo

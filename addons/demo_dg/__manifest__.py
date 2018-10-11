@@ -6,7 +6,7 @@
     "application": True,
     "version": "3.0",
     'author': "Eduardo tellez 1",
-    'description': """cargar libreria python y subir archivos csv""",
+    'description': """cargar  python y subir archivos csv 1""",
      "data": [
         "views/views.xml"
     ],

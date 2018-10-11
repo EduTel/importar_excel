@@ -10,12 +10,17 @@ services:
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
+    #environment:
+    #  - TERM=xterm-256color
+    #stdin_open: true
+    tty: true
   db:
     image: postgres:9.4
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
       - PGDATA=/var/lib/postgresql/data/pgdata
+      #- TERM=xterm-256color
     volumes:
       - odoo-db-data:/var/lib/postgresql/data/pgdata
     ports:
