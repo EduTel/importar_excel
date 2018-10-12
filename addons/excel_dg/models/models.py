@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/python2.7
+#!/usr/local/bin/ipython
 
 import sys
 from odoo import exceptions
