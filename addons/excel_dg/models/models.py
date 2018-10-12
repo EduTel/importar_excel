@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/usr/local/bin/ipython
+#!/usr/local/bin/python
 
 import sys
 from odoo import exceptions
@@ -33,7 +33,7 @@ class TodoList(models.Model):
     date = fields.Datetime(string="Fecha", required=True)
     owner = fields.Many2one("res.users", required=True, index=True)
     description = fields.Text(string="Descripcion")
-    task_ids = fields.One2many("demo.task", "todo_id")
+    task_ids = fields.One2many("demo.task", "todo.id")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('assigned', 'Assigned'),
@@ -61,4 +61,4 @@ class Tasks(models.Model):
         ('in_progress', 'In Progress'),
         ('closed', 'Closed')
     ])
-    todo_id = fields.Many2one("demo.todo_list")
+    todo_id = fields.Many2one("demo.todo.list")
