@@ -64,6 +64,8 @@ RUN pip install pypng
 RUN pip install qrcode
 #MY ADD
 RUN apt update
+RUN apt install apt-utils
+RUN apt list --upgradable
 RUN apt install -y software-properties-common
 RUN apt install -y screenfetch
 RUN pip install --upgrade pip
