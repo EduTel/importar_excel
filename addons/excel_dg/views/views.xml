@@ -5,9 +5,18 @@
         <field name="model">demo.todo_list__t</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="id"/>
+
                 <field name="name_ct_"/>
                 <field name="date_ct_"/>
                 <field name="owner_ct_"/>
+                <field name="state_ct_"/>
+                <field name="description_ct_"/>
+
+                <field name="create_date"/>
+                <field name="write_date"/>
+                <field name="write_uid"/>
+                <field name="create_uid"/>
             </tree>
         </field>
     </record>

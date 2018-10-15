@@ -31,7 +31,7 @@ class TodoList(models.Model):
         ('assigned', 'Assigned TXT'),
         ('in_progress', 'In Progress TXT'),
         ('closed', 'Closed TXT')
-    ], default='draft')
+    ], 'state TXT', default='draft')
     task_ids_ct_ = fields.One2many("demo.task__t", "todo_id_cta_")
     owner_ct_ = fields.Many2one("res.users", 'owner TXT', required=True, index=True)
     @api.one
