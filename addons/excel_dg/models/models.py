@@ -21,7 +21,7 @@ class TodoList(models.Model):
     print colored('=================================================world', 'green')
     Warning("==========================hola mundo")
 
-    _name = "demo.todo_list_t"
+    _name = "demo.todo_listt"
 
     name_ct_ = fields.Char(string="Nombre TXT", size=50, required=True, index=True)
     date_ct_ = fields.Datetime(string="Fecha TXT", required=True)
@@ -32,8 +32,8 @@ class TodoList(models.Model):
         ('in_progress', 'In Progress TXT'),
         ('closed', 'Closed TXT')
     ], default='draft')
-    task_ids_ct_ = fields.One2many("demo.task", "todo_id_cta_")
-    owner_ct_ = fields.Many2one("res.users", required=True, index=True)
+    task_ids_ct_ = fields.One2many("demo.taskt", "todo_id_cta_")
+    owner_ct_ = fields.Many2one("res.users", 'owner TXT', required=True, index=True)
     @api.one
     def assign_list(self):
         self.state = "draft"
@@ -41,7 +41,7 @@ class TodoList(models.Model):
     def on_change_name(self):
         self.description = "%s \n\r %s" % (self.description, self.name_ct_)
 class Tasks(models.Model):
-    _name = "demo.task"
+    _name = "demo.taskt"
 
     name_cta_ = fields.Char(string="Tarea txt")
     hours_cta_ = fields.Integer(string="Horas txt")
@@ -51,4 +51,4 @@ class Tasks(models.Model):
         ('in_progress', 'In Progress TXT'),
         ('closed', 'Closed TXT')
     ])
-    todo_id_cta_ = fields.Many2one("demo.todo_list_t")
+    todo_id_cta_ = fields.Many2one("demo.todo_listt")
