@@ -2,7 +2,7 @@
 <odoo>
     <record id="todo_list_tree_view_id" model="ir.ui.view">
         <field name="name">___Vista Arbol Todo___</field>
-        <field name="model">demo.todo_listt</field>
+        <field name="model">demo.todo_list__t</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name_ct_"/>
@@ -13,7 +13,7 @@
     </record>
     <record id="todo_list_form_view_id" model="ir.ui.view">
         <field name="name">___Vista Formulario TODO___</field>
-        <field name="model">demo.todo_listt</field>
+        <field name="model">demo.todo_list__t</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -50,7 +50,7 @@
     </record>
     <record id="v_id_1" model="ir.ui.view">
         <field name="name">___Vista Form Heredada___</field>
-        <field name="model">demo.todo_listt</field>
+        <field name="model">demo.todo_list__t</field>
         <field name="inherit_id" ref="todo_list_form_view_id"/>
         <field name="arch" type="xml">
             <field name="name_ct_" position="after">
@@ -60,7 +60,7 @@
     </record>
     <record id="main_action_demo_task_list_id" model="ir.actions.act_window">
         <field name="name">___Tareas_txt___</field>
-        <field name="res_model">demo.todo_listt</field>
+        <field name="res_model">demo.todo_list__t</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem id="m_id_1" name="__DEMO_txt__"/>
