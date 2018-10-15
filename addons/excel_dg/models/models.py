@@ -6,59 +6,49 @@ from odoo import exceptions
 import coloredlogs, logging
 from termcolor import colored
 
-
-
+logger = logging.getLogger(__name__)
 
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
-logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
-#coloredlogs.install(level='DEBUG')
-#coloredlogs.install(level='DEBUG', logger=logger)
-
 class TodoList(models.Model):
     coloredlogs.install(level='DEBUG')
-    logger.info('====================================================0')
+    logger.info('====================================================00')
     logger.warning("====================================================1")
     logger.error("====================================================2")
     logger.info('===================================================='+__name__)
-    
     print colored('=================================================hello', 'red')
     print colored('=================================================world', 'green')
+    Warning("==========================hola mundo")
 
-    _name = "demo.todo_list"
+    _name = "demo.todo_list_t"
 
-    name = fields.Char(string="Nombre", size=50, required=True, index=True)
-    date = fields.Datetime(string="Fecha", required=True)
-    owner = fields.Many2one("res.users", required=True, index=True)
-    description = fields.Text(string="Descripcion")
-    task_ids = fields.One2many("demo.task", "todo.id")
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('assigned', 'Assigned'),
-        ('in_progress', 'In Progress'),
-        ('closed', 'Closed')
+    name_ct_ = fields.Char(string="Nombre TXT", size=50, required=True, index=True)
+    date_ct_ = fields.Datetime(string="Fecha TXT", required=True)
+    description_ct_ = fields.Text(string="Descripcion TXT")
+    state_ct_ = fields.Selection([
+        ('draft', 'Draft TXT'),
+        ('assigned', 'Assigned TXT'),
+        ('in_progress', 'In Progress TXT'),
+        ('closed', 'Closed TXT')
     ], default='draft')
-
+    task_ids_ct_ = fields.One2many("demo.task", "todo_id_cta_")
+    owner_ct_ = fields.Many2one("res.users", required=True, index=True)
     @api.one
     def assign_list(self):
         self.state = "draft"
-
     @api.onchange('name')
     def on_change_name(self):
-        self.description = "%s \n\r %s" % (self.description, self.name)
-
-
+        self.description = "%s \n\r %s" % (self.description, self.name_ct_)
 class Tasks(models.Model):
     _name = "demo.task"
 
-    name = fields.Char(string="Tarea")
-    hours = fields.Integer(string="Horas")
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('assigned', 'Assigned'),
-        ('in_progress', 'In Progress'),
-        ('closed', 'Closed')
+    name_cta_ = fields.Char(string="Tarea txt")
+    hours_cta_ = fields.Integer(string="Horas txt")
+    state_cta_ = fields.Selection([
+        ('draft', 'Draft TXT'),
+        ('assigned', 'Assigned TXT'),
+        ('in_progress', 'In Progress TXT'),
+        ('closed', 'Closed TXT')
     ])
-    todo_id = fields.Many2one("demo.todo.list")
+    todo_id_cta_ = fields.Many2one("demo.todo_list_t")

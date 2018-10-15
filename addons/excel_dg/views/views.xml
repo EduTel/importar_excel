@@ -1,77 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record id="todo_list_tree_view" model="ir.ui.view">
-        <field name="name">Vista Arbol Todo</field>
-        <field name="model">demo.todo_list</field>
+    <record id="todo_list_tree_view_id" model="ir.ui.view">
+        <field name="name">___Vista Arbol Todo___</field>
+        <field name="model">demo.todo_list_t</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
-                <field name="date"/>
-                <field name="owner"/>
+                <field name="name_ct_"/>
+                <field name="date_ct_"/>
+                <field name="owner_ct_"/>
             </tree>
         </field>
     </record>
-
-
-    <record id="todo_list_form_view" model="ir.ui.view">
-        <field name="name">Vista Formulario TODO</field>
-        <field name="model">demo.todo_list</field>
+    <record id="todo_list_form_view_id" model="ir.ui.view">
+        <field name="name">___Vista Formulario TODO___</field>
+        <field name="model">demo.todo_list_t</field>
         <field name="arch" type="xml">
             <form>
                 <header>
                     <button string="Asignar" name="assign_list" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,in_progress,closed"/>
+                    <field name="state_ct_" widget="statusbar" statusbar_visible="draft,assigned,in_progress,closed"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" options="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="date"/>
+                            <field name="name_ct_" options="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date_ct_"/>
                         </group>
                         <group>
-                            <field name="owner"/>
+                            <field name="owner_ct_"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Tareas">
-                            <field name="task_ids">
+                            <field name="task_ids_ct_">
                                 <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="hours"/>
-                                    <field name="state"/>
+                                    <field name="name_cta_"/>
+                                    <field name="hours_cta_"/>
+                                    <field name="state_cta_"/>
                                 </tree>
                             </field>
                         </page>
                         <page string="Notas">
-                            <field name="description"/>
+                            <field name="description_ct_"/>
                         </page>
                     </notebook>
                 </sheet>
             </form>
         </field>
     </record>
-
-
-    <record id="inherit_form_view_4_todo" model="ir.ui.view">
-        <field name="name">Vista Form Heredada</field>
-        <field name="model">demo.todo_list</field>
-        <field name="inherit_id" ref="todo_list_form_view"/>
+    <record id="v_id_1" model="ir.ui.view">
+        <field name="name">___Vista Form Heredada___</field>
+        <field name="model">demo.todo_list_t</field>
+        <field name="inherit_id" ref="todo_list_form_view_id"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <h1>Heredado</h1>
+            <field name="name_ct_" position="after">
+                <h1>__Heredado_txt__</h1>
             </field>
         </field>
     </record>
-
-
-    <record id="main_action_demo_task_list" model="ir.actions.act_window">
-        <field name="name">Tareas</field>
-        <field name="res_model">demo.todo_list</field>
+    <record id="main_action_demo_task_list_id" model="ir.actions.act_window">
+        <field name="name">___Tareas_txt___</field>
+        <field name="res_model">demo.todo_list_t</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem id="root_menu_task" name="DEMO"/>
-    <menuitem id="menu_prueba_uno" name="Tareas" parent="root_menu_task"/>
-    <menuitem id="menu_tareas_lista" string="Mis Tareas" action="main_action_demo_task_list" parent="menu_prueba_uno"/>
+    <menuitem id="m_id_1" name="__DEMO_txt__"/>
+    <menuitem id="m_id_2" name="__Tareas_txt__" parent="m_id_1"/>
+    <menuitem id="menu_tareas_lista" string="Mis Tareas" action="main_action_demo_task_list_id" parent="m_id_2"/>
 </odoo>
