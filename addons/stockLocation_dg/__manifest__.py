@@ -2,7 +2,7 @@
     "name": "Stock Location Desiteg",
     "depends": [
         "base",
-        "stock.location"
+        "stock"
     ],
     "application": True,
     "data": [
