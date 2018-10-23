@@ -12,6 +12,19 @@ from odoo.exceptions import Warning
 logger = logging.getLogger(__name__)
 
 
+class partner_inherit(models.Model):
+    _inherit = 'res.partner'
+
+    @api.multi
+    @api.depends('name')
+    def name_get(self):
+        result = []
+        for data in self:
+            name = data.name
+            result.append((data.id, name))
+        return result
+
+
 class TodoList(models.Model):
     coloredlogs.install(level='DEBUG')
     _name = "require.purchase_dg"
@@ -43,6 +56,7 @@ class TodoList(models.Model):
     # self.pool.get('res.country').browse
     # domain=[('id', '=', _my_user_name )]
     # 'module' object has no attribute 'one2many'
+    # domain=[('parent_id', '=', env['res.partner'].id)]
 
 
     # @api.model
@@ -50,15 +64,15 @@ class TodoList(models.Model):
         # name = self.env['res.partner'].search([('id', '=', self.env.user.partner_id)])
         return self.env.user.partner_id
 
-    name_c = fields.Char(string="Name", size=50, required=True, index=True)
-    date_c = fields.Datetime('Date', help="Date" , readonly=True)
-    buyer_c = fields.Many2one('res.partner', string="Buyer", help="Buyer", default=_my_user_name, readonly=True)
-    products_c = fields.One2many('require.propurchase_dg', 'purchase_id_c', string="Products", help="Products")
+    name_c = fields.Char(string="Nombre", size=50, required=True, index=True)
+    date_c = fields.Datetime('Fecha', help="Date", readonly=True, default=fields.Datetime.now, store=True )
+    buyer_c = fields.Many2one('res.partner', string="Comprador", help="Buyer", default=_my_user_name, readonly=True, store=True , ondelete='set null' )
+    products_c = fields.One2many('require.propurchase_dg', 'purchase_id_c', string="Productos", help="Products", required=True)
     state_c = fields.Selection([
-        ('draft', 'Draft'),
-        ('pending', 'Pending'),
-        ('approved', 'Approved')
-    ], 'state ct', default='draft')
+        ('draft', 'Borrador'),
+        ('pending', 'Pendiente'),
+        ('approved', 'Aprobada')
+    ], string='Estado', default='draft')
 
     logger.warning("====================================================Usuario")
     logger.warning("====================================================id: %s", buyer_c)
@@ -68,8 +82,6 @@ class TodoList(models.Model):
     # @api.model
     # def _default_user(self):
     #     return self.env.context.get('buyer_c', self.env.user.login)
-
-    
 
     @api.returns('res.partner')
     def afun2(self):
@@ -85,7 +97,7 @@ class TodoList(models.Model):
 class ProductList(models.Model):
     _name = "require.propurchase_dg"
     logger.warning("====================================================Iniciando %s", _name)
-    name_c = fields.Char(string="Name", size=50, required=True, index=True)
-    note_c = fields.Char(string="Note", size=150, required=True)
-    purchase_id_c = fields.Many2one('require.purchase_dg', help="Buyer", readonly=True)
+    name_c = fields.Char(string="Nombre", size=50, required=True, index=True)
+    note_c = fields.Text(string="Descripción", size=150, required=True)
+    purchase_id_c = fields.Many2one('require.purchase_dg', help="Comprador", readonly=True, required=True)
     logger.warning("====================================================Terminado")
