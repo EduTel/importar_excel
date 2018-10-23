@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report 
+            string="Requisición de compra" 
+            id="action_report_purchase_dg" 
+            model="require.purchase_dg" 
+            report_type="qweb-pdf"
+            name="requisiciondeCompras_dg.report_purchase_dg" 
+            file="requisiciondeCompras_dg.report_purchase_dg" 
+        />
+    <template id="report_purchase_dg">
+        <t t-call="report.html_container">
+            <div class="page">
+                <t t-foreach="docs" t-as="o">
+                    <!--<t t-call="purchase.report_purchasequotation_document" t-lang="o.partner_id.lang"/>-->
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

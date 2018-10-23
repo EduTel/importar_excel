@@ -92,6 +92,9 @@ class TodoList(models.Model):
     @api.one
     def assign_list(self):
         pass
+    @api.one
+    def assign_list(self):
+        pass
 
 
 class ProductList(models.Model):

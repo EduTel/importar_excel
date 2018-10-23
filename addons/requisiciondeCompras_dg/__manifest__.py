@@ -4,8 +4,10 @@
     "depends": [
         "base",
         "report",
-        "purchase"
+        "purchase",
+        'barcodes'
     ],
+    'summary': 'Manage Purchase requisition Desiteg',
     "application": True,
     'description': """
         Requisición de compra
@@ -14,9 +16,10 @@
     'website': 'https://es.wikipedia.org/wiki/Requisici%C3%B3n_de_compra',
     "images": ["img/requisicion.png"],
     "data": [
-        "views/views.xml"
+        "views/views.xml",
+        "report/account_invoice_report_view.xml"
     ],
-    "css":[
+    "css": [
         "css/index.css"
     ],
     "version": "0.1",

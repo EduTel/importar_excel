@@ -6,7 +6,8 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="id"/>
-
+                
+                <field name="name_c"/>
                 <field name="date_c"/>
                 <field name="buyer_c"/>
                 <field name="state_c"/>
@@ -23,7 +24,8 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button string="Asignar" name="assign_list" type="object"/>
+                    <button string="Revisar" name="purchase_revisar" type="object"/>
+                    <button string="Aprobar" name="purchase_Aprobar" type="object"/>
                     <field name="state_c" widget="statusbar" statusbar_visible="draft,pending,approved"/>
                 </header>
                 <sheet>
