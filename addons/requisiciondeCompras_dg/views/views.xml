@@ -1,4 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="tree_view_id" model="ir.ui.view">
+        <field name="name">___Vista Arbol___</field>
+        <field name="model">require.purchase_dg</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id"/>
 
+                <!--<field name="date_c"/>-->
+                <field name="buyer_c"/>
+                <field name="state_c"/>
+
+                <field name="create_date"/>
+                <field name="write_uid"/>
+
+
+                
+            
+
+            </tree>
+        </field>
+    </record>
+    <record id="form_view_id" model="ir.ui.view">
+        <field name="name">___Vista Formulario___</field>
+        <field name="model">require.purchase_dg</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Asignar" name="assign_list" type="object"/>
+                    <field name="state_c" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name_c" options="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="buyer_c"  options="{'no_create': True, 'no_create_edit':True}" />
+                        </group>
+                    </group>
+                     <group>
+                        <group>
+                            <field name="date_c"  readonly="1" />
+                        </group>
+                        <group>
+                            <field name="create_date"  readonly="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="products_c" >
+                                <!-- colspan="4" nolabel="1" mode="tree" -->
+                                <!--  create="false"-->
+                                <tree string="Analytic Defaults" editable="botttom">
+                                    <field name="name_c"/>
+                                    <field name="note_c"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="main_action_id" model="ir.actions.act_window">
+        <field name="name">Requisicion de compra</field>
+        <field name="res_model">require.purchase_dg</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="m_id_1" name="__Purchase requisition__"/>
+    <menuitem id="m_id_2" name="Requisicion" parent="m_id_1"/>
+    <menuitem id="menu_tareas_lista" string="Mis Tareas" action="main_action_id" parent="m_id_2"/>
 </odoo>
