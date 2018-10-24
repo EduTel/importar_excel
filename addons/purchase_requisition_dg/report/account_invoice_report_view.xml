@@ -33,7 +33,7 @@
                                     <td><t t-esc="o.create_date"/></td>
                                     <td><t t-esc="o.requisition_date"/></td>
                                     <td><t t-esc="o.responsible"/></td>
-                                    <td><t t-esc="o.buyer.name"/></td>
+                                    <td><t t-esc="o.write_uid.name"/></td>
                                     <td> <span t-field="o.state"></span></td>
                                 </tr>
                             </table>
@@ -44,7 +44,7 @@
                                     <th>Unidad de medida</th>
                                     <th>Descripcion</th>
                                 </tr>
-                                <t t-foreach="o.products_c" t-as="p">
+                                <t t-foreach="o.products" t-as="p">
                                     <tr>
                                         <td><t t-esc="p.amount"/></td>
                                         <td><span t-field="p.product_uom_id"></span> </td>
