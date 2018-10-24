@@ -32,7 +32,7 @@
                                     <td><t t-esc="o.name"/></td>
                                     <td><t t-esc="o.create_date"/></td>
                                     <td><t t-esc="o.requisition_date"/></td>
-                                    <td><t t-esc="o.responsible"/></td>
+                                    <td><t t-esc="o.responsible.partner_id"/></td>
                                     <td><t t-esc="o.write_uid.name"/></td>
                                     <td> <span t-field="o.state"></span></td>
                                 </tr>
