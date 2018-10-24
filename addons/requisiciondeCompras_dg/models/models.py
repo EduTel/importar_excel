@@ -8,22 +8,19 @@ from odoo import exceptions
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
-
 logger = logging.getLogger(__name__)
 
-
-class partner_inherit(models.Model):
-    _inherit = 'res.partner'
-
-    @api.multi
-    @api.depends('name')
-    def name_get(self):
-        result = []
-        for data in self:
-            name = data.name
-            result.append((data.id, name))
-        return result
-
+# class partner_inherit(models.Model):
+#     _inherit = 'res.partner'
+# 
+#     @api.multi
+#     @api.depends('name')
+#     def name_get(self):
+#         result = []
+#         for data in self:
+#             name = data.name
+#             result.append((data.id, name))
+#         return result
 
 class TodoList(models.Model):
     coloredlogs.install(level='DEBUG')
@@ -62,16 +59,22 @@ class TodoList(models.Model):
     # @api.model
     def _my_user_name(self):
         # name = self.env['res.partner'].search([('id', '=', self.env.user.partner_id)])
-        return self.env.user.partner_id
+        return self.env.user.id
+    def _my_folio(self):
+        # name = self.env['res.partner'].search([('id', '=', self.env.user.partner_id)])
+        return "0001"
 
-    name_c = fields.Char(string="Nombre", size=50, required=True, index=True)
-    date_c = fields.Datetime('Fecha', help="Date", readonly=True, default=fields.Datetime.now, store=True )
-    buyer_c = fields.Many2one('res.partner', string="Comprador", help="Buyer", default=_my_user_name, readonly=True, store=True , ondelete='set null' )
+    name_c = fields.Char(string="Nombre", default=_my_folio, size=50, readonly=True, required=True, index=True)
+    date_c = fields.Datetime('Fecha de creacion', help="Date", readonly=True, default=fields.Datetime.now, store=True )
+    dateRequerimiento_c = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
+    buyer_c = fields.Many2one('res.users', string="Comprador", help="Comprador", default=_my_user_name, readonly=True, store=True , ondelete='set null' )
+    responsible_c = fields.Many2one('res.users', string="Responsable", help="Responsable", store=True , ondelete='set null' )
     products_c = fields.One2many('require.propurchase_dg', 'purchase_id_c', string="Productos", help="Products", required=True)
     state_c = fields.Selection([
         ('draft', 'Borrador'),
         ('pending', 'Pendiente'),
-        ('approved', 'Aprobada')
+        ('approved', 'Aprobada'),
+        ('Completed', 'Completado')
     ], string='Estado', default='draft')
 
     logger.warning("====================================================Usuario")
@@ -82,6 +85,9 @@ class TodoList(models.Model):
     # @api.model
     # def _default_user(self):
     #     return self.env.context.get('buyer_c', self.env.user.login)
+    @api.one
+    def status_Confirmar(self):
+        self.state_c = "pending"
 
     @api.returns('res.partner')
     def afun2(self):
@@ -92,15 +98,13 @@ class TodoList(models.Model):
     @api.one
     def assign_list(self):
         pass
-    @api.one
-    def assign_list(self):
-        pass
 
 
 class ProductList(models.Model):
     _name = "require.propurchase_dg"
     logger.warning("====================================================Iniciando %s", _name)
-    name_c = fields.Char(string="Nombre", size=50, required=True, index=True)
-    note_c = fields.Text(string="Descripción", size=150, required=True)
+    amount_c = fields.Integer(string='Cantidad', size=50, required=True, index=True)
+    note_c = fields.Text(string="Descripción", size=250, required=True)
+    productUomId_c = fields.Many2one('product.uom', string='Unidad de medida', help="Unidad de medida", store=True , ondelete='set null')
     purchase_id_c = fields.Many2one('require.purchase_dg', help="Comprador", readonly=True, required=True)
     logger.warning("====================================================Terminado")

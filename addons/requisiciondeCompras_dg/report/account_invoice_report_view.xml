@@ -7,14 +7,50 @@
             report_type="qweb-pdf"
             name="requisiciondeCompras_dg.report_purchase_dg" 
             file="requisiciondeCompras_dg.report_purchase_dg" 
+            header="True"
         />
     <template id="report_purchase_dg">
-        <t t-call="report.html_container">
-            <div class="page">
-                <t t-foreach="docs" t-as="o">
-                    <!--<t t-call="purchase.report_purchasequotation_document" t-lang="o.partner_id.lang"/>-->
-                </t>
-            </div>
-        </t>
+         <t t-name="template-report_purchase_dg">
+            <!--external_layout|html_container-->
+            <t t-call="report.html_container">
+                <div class="page">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="panel panel-default" style="padding: 5px;">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">Requisicion </div>
+                            <!--style="width:100%; border: 1pt solid black; border-collapse:separate; border-radius:0pt;"-->
+                            <table class="table table-striped" >
+                                <tr class="active">
+                                    <th>Nombre</th>
+                                    <th>Comprador</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                                <tr>
+                                    <td><t t-esc="o.name_c"/></td>
+                                    <td><t t-esc="o.date_c"/></td>
+                                    <td><t t-esc="o.buyer_c.name"/></td>
+                                    <td> <span t-field="o.state_c"></span></td>
+                                </tr>
+                            </table>
+                            <!-- Table -->
+                            <table class="table table-striped">
+                                <tr class="active">
+                                    <th>Producto</th>
+                                    <th>Descripcion</th>
+                                </tr>
+                                <t t-foreach="o.products_c" t-as="p">
+                                    <tr>
+                                        <td><t t-esc="p.amount_c"/></td>
+                                        <td><span t-field="p.productUomId_c"></span> </td>
+                                        <td><t t-esc="p.note_c"/></td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </t>
+         </t>
     </template>
 </odoo>

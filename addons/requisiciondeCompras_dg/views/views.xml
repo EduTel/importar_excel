@@ -22,23 +22,25 @@
         <field name="name">___Vista Formulario___</field>
         <field name="model">require.purchase_dg</field>
         <field name="arch" type="xml">
-            <form>
+            <form class="oe_form_configuration">
                 <header>
-                    <button string="Revisar" name="purchase_revisar" type="object"/>
-                    <button string="Aprobar" name="purchase_Aprobar" type="object"/>
-                    <field name="state_c" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+                    <button string="Confirmar" name="status_Confirmar" type="object"/>
+                    <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
+                    <field name="state_c" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
                 </header>
                 <sheet>
+                    <div>
+                        <h1 class="mt0">
+                            <field name="name_c" options="{'readonly': [('state', '!=', 'draft')]}" class="oe_inline"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name_c" options="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="dateRequerimiento_c" options="{'datepicker':{'minDate': 0}}"/>
+                            <field name="responsible_c" />
                         </group>
                         <group>
                             <field name="buyer_c"  options="{'no_create': True, 'no_create_edit':True, 'fields': ['name']}" context="{'form_view_ref': 'res.partner.name'}" />
-                        </group>
-                    </group>
-                     <group>
-                        <group>
                             <field name="date_c"  readonly="1" />
                         </group>
                     </group>
@@ -47,7 +49,8 @@
                         <page string="Productos">
                             <field name="products_c" >
                                 <tree string="" editable="botttom" decoration-danger="('state' == 'draft')">
-                                    <field name="name_c" required="1"/>
+                                    <field name="amount_c" placeholder="Cantidad" required="1"/>
+                                    <field name="productUomId_c" required="1" options="{'no_create': True, 'no_create_edit':True, 'fields': ['name']}"/>
                                     <field name="note_c" required="1"/>
                                 </tree>
                             </field>
