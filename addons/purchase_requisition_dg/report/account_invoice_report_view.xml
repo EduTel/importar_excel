@@ -3,10 +3,10 @@
     <report 
             string="Requisición de compra" 
             id="action_report_purchase_dg" 
-            model="require.purchase_dg" 
+            model="purchase.requisition" 
             report_type="qweb-pdf"
-            name="requisiciondeCompras_dg.report_purchase_dg" 
-            file="requisiciondeCompras_dg.report_purchase_dg" 
+            name="purchase_requisition_dg.report_purchase_dg" 
+            file="purchase_requisition_dg.report_purchase_dg" 
             header="True"
         />
     <template id="report_purchase_dg">
@@ -22,28 +22,33 @@
                             <table class="table table-striped" >
                                 <tr class="active">
                                     <th>Nombre</th>
-                                    <th>Comprador</th>
                                     <th>Fecha</th>
+                                    <th>Fecha de requerimiento</th>
+                                    <th>Responsable</th>
+                                    <th>Comprador</th>
                                     <th>Estado</th>
                                 </tr>
                                 <tr>
-                                    <td><t t-esc="o.name_c"/></td>
-                                    <td><t t-esc="o.date_c"/></td>
-                                    <td><t t-esc="o.buyer_c.name"/></td>
-                                    <td> <span t-field="o.state_c"></span></td>
+                                    <td><t t-esc="o.name"/></td>
+                                    <td><t t-esc="o.create_date"/></td>
+                                    <td><t t-esc="o.requisition_date"/></td>
+                                    <td><t t-esc="o.responsible"/></td>
+                                    <td><t t-esc="o.buyer.name"/></td>
+                                    <td> <span t-field="o.state"></span></td>
                                 </tr>
                             </table>
                             <!-- Table -->
                             <table class="table table-striped">
                                 <tr class="active">
                                     <th>Producto</th>
+                                    <th>Unidad de medida</th>
                                     <th>Descripcion</th>
                                 </tr>
                                 <t t-foreach="o.products_c" t-as="p">
                                     <tr>
-                                        <td><t t-esc="p.amount_c"/></td>
-                                        <td><span t-field="p.productUomId_c"></span> </td>
-                                        <td><t t-esc="p.note_c"/></td>
+                                        <td><t t-esc="p.amount"/></td>
+                                        <td><span t-field="p.product_uom_id"></span> </td>
+                                        <td><t t-esc="p.note"/></td>
                                     </tr>
                                 </t>
                             </table>

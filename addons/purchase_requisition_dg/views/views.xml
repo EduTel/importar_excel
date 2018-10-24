@@ -2,56 +2,54 @@
 <odoo>
     <record id="tree_view_id" model="ir.ui.view">
         <field name="name">___Vista Arbol___</field>
-        <field name="model">require.purchase_dg</field>
+        <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="id"/>
                 
-                <field name="name_c"/>
-                <field name="date_c"/>
-                <field name="buyer_c"/>
-                <field name="state_c"/>
-                <!--
+                <field name="name"/>
+                <field name="state"/>
+                <field name="responsible"/>
+                <field name="requisition_date"/>
                 <field name="create_date"/>
                 <field name="write_uid"/>
-                -->
+
             </tree>
         </field>
     </record>
     <record id="form_view_id" model="ir.ui.view">
         <field name="name">___Vista Formulario___</field>
-        <field name="model">require.purchase_dg</field>
+        <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form class="oe_form_configuration">
                 <header>
                     <button string="Confirmar" name="status_Confirmar" type="object"/>
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
-                    <field name="state_c" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
                 </header>
                 <sheet>
                     <div>
                         <h1 class="mt0">
-                            <field name="name_c" options="{'readonly': [('state', '!=', 'draft')]}" class="oe_inline"/>
+                            <field name="name" options="{'readonly': [('state', '!=', 'draft')]}" class="oe_inline"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="dateRequerimiento_c" options="{'datepicker':{'minDate': 0}}"/>
-                            <field name="responsible_c" />
+                            <field name="requisition_date" options="{'datepicker':{'minDate': 0}}"/>
+                            <field name="responsible" />
                         </group>
                         <group>
-                            <field name="buyer_c"  options="{'no_create': True, 'no_create_edit':True, 'fields': ['name']}" context="{'form_view_ref': 'res.partner.name'}" />
-                            <field name="date_c"  readonly="1" />
+
                         </group>
                     </group>
                     <separator/>
                     <notebook>
                         <page string="Productos">
-                            <field name="products_c" >
+                            <field name="products" >
                                 <tree string="" editable="botttom" decoration-danger="('state' == 'draft')">
-                                    <field name="amount_c" placeholder="Cantidad" required="1"/>
-                                    <field name="productUomId_c" required="1" options="{'no_create': True, 'no_create_edit':True, 'fields': ['name']}"/>
-                                    <field name="note_c" required="1"/>
+                                    <field name="amount" placeholder="Cantidad" required="1"/>
+                                    <field name="product_uom_id" required="1" options="{'no_create': True, 'no_create_edit':True, 'fields': ['name']}"/>
+                                    <field name="note" required="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -62,12 +60,8 @@
     </record>
     <record id="main_action_id" model="ir.actions.act_window">
         <field name="name">Requisicion</field>
-        <field name="res_model">require.purchase_dg</field>
+        <field name="res_model">purchase.requisition</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!--
-    <menuitem id="m_id_1" name="__Purchase requisition__"/>
-    <menuitem id="m_id_2" name="Requisicion" parent="m_id_1"/>
-    -->
     <menuitem name="Requisicion de compra" id="menu_tareas_lista" parent="account.menu_finance_payables" sequence="111" string="Mis Tareas" action="main_action_id" />
 </odoo> 

@@ -17,7 +17,8 @@
     "images": ["img/requisicion.png"],
     "data": [
         "views/views.xml",
-        "report/account_invoice_report_view.xml"
+        "report/account_invoice_report_view.xml",
+        "data/sequence.xml"
     ],
     "css": [
         "css/index.css"
