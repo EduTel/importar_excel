@@ -30,9 +30,9 @@ class PurchaseRequisition(models.Model):
         ('Completed', 'Completado')
     ], string='Estado', default='draft')
 
-    @api.one
-    def status_Confirmar(self):
-        self.state = "pending"
+    #@api.one
+    #def status_Confirmar(self):
+    #    self.state = "pending"
 
     @api.model
     def create(self, values):
@@ -40,6 +40,34 @@ class PurchaseRequisition(models.Model):
             sequence = self.env.ref("purchase_requisition_dg.sequence_reconcile_seq")
             values["name"]= sequence.next_by_id()
         return super(PurchaseRequisition,self).create(values)
+    
+    @api.multi
+    def status_Confirmar(self):
+        logger.warning("====================================================status_Confirmar")
+        self.state = "pending"
+        self.ensure_one()
+        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        ctx = dict(
+            default_model='account.payment',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            default_composition_mode='comment',
+            mark_invoice_as_sent=True,
+            force_email=True
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
 
     logger.warning("====================================================Terminado")
 

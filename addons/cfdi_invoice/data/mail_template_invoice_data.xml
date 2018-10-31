@@ -1,0 +1,179 @@
+<?xml version="1.0" ?>
+<odoo>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account'), ('name', '=', 'email_template_edi_invoice')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+    <record id="account.email_template_edi_invoice" model="mail.template">
+        <field name="report_template" ref="cfdi_invoice.cfdi_invoice_report"/>
+    </record>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account'), ('name', '=', 'email_template_edi_invoice')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_invoice_v2" model="mail.template">
+            <field name="name">Invoice - Send by Email</field>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="subject">${object.company_id.name} Factura (Ref ${object.number or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="cfdi_invoice.cfdi_invoice_report"/>
+            <field name="report_name">
+                Factura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td valign="top" align="center">
+                                    <table style="min-width:90%; max-width:90%;" width="560"
+                                           cellspacing="0" cellpadding="0" border="0" align="center">
+                                        <tbody>
+                                            <tr style="position: inherit;z-index: 1;pointer-events: auto;">
+                                                <td valign="top" align="center">
+                                                    <table style="min-width:100%; border-bottom:1px solid #d0d0d0;"
+                                                           width="100%" cellspacing="0" cellpadding="0" border="0"
+                                                           align="center"><!-- start space -->
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="font-size: 1px; line-height: 1px;" class=""
+                                                                    valign="top" height="25">
+                                                                </td>
+                                                            </tr><!-- end space -->
+                                                            <tr style="position: inherit;z-index: 1;pointer-events: auto;">
+                                                                <td valign="top" align="center">
+                                                                    <table style="min-width:100%;" width="100%"
+                                                                           cellspacing="0" cellpadding="0" border="0"
+                                                                           align="left">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="font-size: 30px; color: rgb(107, 125, 251); font-weight: bold; text-align: left; font-family: &quot;Open Sans&quot;, Arial, Helvetica, sans-serif; line-height: 36px; cursor: text; position: relative;z-index: 2;"
+                                                                                    panel-color="inside_box"
+                                                                                    editor="content"
+                                                                                    align="center">
+                                                                                    Estimado ${object.partner_id.name}
+                                                                                    % if object.partner_id.parent_id:
+                                                                                    (${object.partner_id.parent_id.name})
+                                                                                    % endif
+                                                                                </td>
+                                                                            </tr><!-- start space -->
+                                                                            <tr>
+                                                                                <td style="font-size: 1px; line-height: 1px;"
+                                                                                    class="" valign="top" height="5">
+                                                                                </td>
+                                                                            </tr><!-- end space -->
+                                                                            <tr>
+                                                                                <td style="font-size: 16px; color: rgb(51, 51, 51); font-weight: 600; text-align: left; font-family: &quot;Open Sans&quot;, Arial, Helvetica, sans-serif; line-height: 24px; cursor: text; position: relative; z-index: 2;"
+                                                                                    panel-color="inside_box"
+                                                                                    editor="content"
+                                                                                    align="center">
+                                                                                    Aquí está su
+                                                                                    % if object.number:
+                                                                                    factura
+                                                                                    <strong>${object.number}</strong>
+                                                                                    % else:
+                                                                                    factura
+                                                                                    %endif
+                                                                                    % if object.origin:
+                                                                                    (with reference: ${object.origin})
+                                                                                    % endif
+                                                                                    por el importe de
+                                                                                    <strong>
+                                                                                        ${format_amount(object.amount_total, object.currency_id)}
+                                                                                    </strong>
+                                                                                    de ${object.company_id.name}.
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr><!-- start space -->
+                                                                                <td style="font-size: 1px; line-height: 1px;"
+                                                                                    class="" valign="top" height="30">
+                                                                                </td>
+                                                                            </tr><!-- end space -->
+                                                                            <tr>
+                                                                                <td style="font-size: 14px; color: rgb(51, 51, 51); font-weight: 600; text-align: left; font-family: &quot;Open Sans&quot;, Arial, Helvetica, sans-serif; line-height: 24px; cursor: text; position: relative; z-index: 2;"
+                                                                                    panel-color="inside_box"
+                                                                                    editor="content"
+                                                                                    align="center">
+                                                                                    % if object.state=='paid':
+                                                                                    Esta factura ya está pagada.
+                                                                                    % else:
+                                                                                    Por favor, envíenos el pago lo antes
+                                                                                    posible a su conveniencia.
+                                                                                    % endif
+                                                                                    <br/>
+                                                                                    Gracias.
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr><!-- start space -->
+                                                                                <td style="font-size: 1px; line-height: 1px;"
+                                                                                    class="" valign="top" height="30">
+                                                                                </td>
+                                                                            </tr><!-- end space -->
+                                                                            <tr>
+                                                                                <td style="font-size: 14px; color: rgb(51, 51, 51); font-weight: 600; text-align: left; font-family: &quot;Open Sans&quot;, Arial, Helvetica, sans-serif; line-height: 24px; cursor: text; position: relative; z-index: 2;"
+                                                                                    panel-color="inside_box"
+                                                                                    editor="content"
+                                                                                    align="center">
+                                                                                    No dude en contactar con nosotros si
+                                                                                    tiene alguna pregunta.
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr><!-- start space-->
+                                                                                <td style="font-size: 1px; line-height: 1px;"
+                                                                                    class="" valign="top" height="5">
+                                                                                </td>
+                                                                            </tr><!-- end space -->
+                                                                            <tr>
+                                                                                <td style="font-size: 1px; line-height: 1px;"
+                                                                                    class=""
+                                                                                    valign="top" height="25">
+                                                                                </td>
+                                                                            </tr><!-- end space -->
+                                                                            <tr>
+                                                                                <td style="font-size: 14px; color: rgb(51, 51, 51); font-weight: 600; text-align: left; font-family: &quot;Open Sans&quot;, Arial, Helvetica, sans-serif; line-height: 24px; cursor: text; position: relative; z-index: 2;"
+                                                                                    panel-color="inside_box"
+                                                                                    editor="content"
+                                                                                    align="center">
+                                                                                    Atentamente
+                                                                                    <br/>
+                                                                                    % if object.user_id and object.user_id.signature:
+                                                                                      ${object.user_id.name}
+                                                                                    % endif
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 1px; line-height: 1px;" class=""
+                                                                    valign="top" height="25">
+                                                                </td>
+                                                            </tr><!-- end space -->
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
