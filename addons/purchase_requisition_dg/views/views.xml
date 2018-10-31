@@ -23,7 +23,7 @@
         <field name="arch" type="xml">
             <form class="oe_form_configuration">
                 <header>
-                    <button string="Confirmar" name="status_Confirmar" type="object"/>
+                    <button string="Confirmar" name="sent_email" type="object"/>
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
                 </header>

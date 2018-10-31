@@ -30,9 +30,9 @@ class PurchaseRequisition(models.Model):
         ('Completed', 'Completado')
     ], string='Estado', default='draft')
 
-    #@api.one
-    #def status_Confirmar(self):
-    #    self.state = "pending"
+    # @api.one
+    # def status_Confirmar(self):
+    #     self.state = "pending"
 
     @api.model
     def create(self, values):
@@ -42,12 +42,15 @@ class PurchaseRequisition(models.Model):
         return super(PurchaseRequisition,self).create(values)
     
     @api.multi
-    def status_Confirmar(self):
+    def sent_email(self):
         logger.warning("====================================================status_Confirmar")
         self.state = "pending"
         self.ensure_one()
+        logger.warning("====================================================status_Confirmar 1")
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
+        logger.warning("====================================================status_Confirmar 2")
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        logger.warning("====================================================status_Confirmar 3")
         ctx = dict(
             default_model='account.payment',
             default_res_id=self.id,
