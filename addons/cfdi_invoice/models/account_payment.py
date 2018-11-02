@@ -455,6 +455,7 @@ class AccountPayment(models.Model):
 
     @api.multi
     def sent_email(self):
+        _log.warning("====================================================sent_email 02")
         self.ensure_one()
         template = self.env.ref(
             'cfdi_invoice.email_template_edi_payment', False)

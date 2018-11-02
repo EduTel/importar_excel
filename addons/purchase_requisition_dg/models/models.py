@@ -14,15 +14,16 @@ logger = logging.getLogger(__name__)
 class PurchaseRequisition(models.Model):
     coloredlogs.install(level='DEBUG')
     _name = "purchase.requisition"
+    _description = 'Modulo de requisicion de compras'
     logger.warning("====================================================Iniciando %s", _name)
 
     def _my_user_name(self):
         return self.env.user.id
 
-    name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False)
+    name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
     responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", store=True , ondelete='set null' )
-    products = fields.One2many('require.propurchase_dg', 'purchase_id', string="Productos", help="Products", required=True)
+    products = fields.One2many('require.propurchase_dg', 'purchase_id', string="Productos", help="Products", required=True , ondelete='set null')
     state = fields.Selection([
         ('draft', 'Borrador'),
         ('pending', 'Pendiente'),
@@ -44,22 +45,28 @@ class PurchaseRequisition(models.Model):
     @api.multi
     def sent_email(self):
         logger.warning("====================================================status_Confirmar")
-        self.state = "pending"
+        # self.state = "pending"
         self.ensure_one()
-        logger.warning("====================================================status_Confirmar 1")
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
-        logger.warning("====================================================status_Confirmar 2")
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        logger.warning("====================================================status_Confirmar 3")
-        ctx = dict(
-            default_model='account.payment',
+        logger.warning("====================================================id: %s", compose_form.id)
+        logger.warning("====================================================id: %s", template.id)
+        logger.warning("====================================================My Contexto")
+        logger.warning(self.env.context)
+        
+        context = dict(
+            default_model='purchase.requisition',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template and template.id or False,
+            default_template_id=template and template.id or "False",
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
-            force_email=True
+            force_email=True,
+            # default_notify= True,
+            # show_address = True
         )
+        logger.warning("====================================================My Contexto creado")
+        logger.warning(context)
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
@@ -69,7 +76,7 @@ class PurchaseRequisition(models.Model):
             'views': [(compose_form.id, 'form')],
             'view_id': compose_form.id,
             'target': 'new',
-            'context': ctx,
+            'context': context,
         }
 
     logger.warning("====================================================Terminado")
@@ -77,8 +84,8 @@ class PurchaseRequisition(models.Model):
 class ProductList(models.Model):
     _name = "require.propurchase_dg"
     logger.warning("====================================================Iniciando %s", _name)
-    amount = fields.Integer(string='Cantidad', size=50, required=True, index=True)
-    note = fields.Text(string="Descripción", size=250, required=True)
+    amount = fields.Integer(string='Cantidad', size=50, required=True, index=True, store=True)
+    note = fields.Text(string="Descripción", size=250, required=True, store=True)
     product_uom_id = fields.Many2one('product.uom', string='Unidad de medida', help="Unidad de medida", store=True , ondelete='set null')
-    purchase_id = fields.Many2one('purchase.requisition', help="Comprador", readonly=True, required=True)
+    purchase_id = fields.Many2one('purchase.requisition', help="Comprador", readonly=True, required=True, store=True, ondelete='cascade')
     logger.warning("====================================================Terminado")

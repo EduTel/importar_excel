@@ -66,9 +66,9 @@
                 <form>
                     <header>
                         <button name="post" type="object" class="oe_highlight" states="draft" string="Validar"/>
-                        <button name="sent_email" type="object" class="oe_highlight" attrs="{'invisible':['|',('cfdi','=',False),('state','in',('draft','cancelled'))]}" string="Enviar por correo electrónico"></button>
+                        <button name="sent_email" type="object" class="oe_highlight"  string="Enviar por correo electrónico"></button>
                         <button name="timbrar" type="object" class="oe_highlight" attrs="{'invisible':['|',('cfdi','=',True),('state','in',('draft','cancelled'))]}" string="Timbrar CFDI"/>
-                        <button name="action_cancel" type="object" attrs="{'invisible':[('state','=','cancelled')]}" string="Cancelar"/>
+                        <button name="action_cancel" type="object" attrs="{'invisible':[('state','=','cancelled')]}" string="Cancelarr"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
                     </header>
                     <sheet>

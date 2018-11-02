@@ -5,7 +5,8 @@
         "base",
         "report",
         "purchase",
-        'barcodes'
+        'barcodes',
+        'mail'
     ],
     'summary': 'Manage Purchase requisition Desiteg',
     "application": True,
