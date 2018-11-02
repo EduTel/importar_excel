@@ -12,14 +12,17 @@ logger = logging.getLogger(__name__)
 
 
 class PurchaseRequisition(models.Model):
+    """Nuevo modulo de Odoo Team"""
     coloredlogs.install(level='DEBUG')
     _name = "purchase.requisition"
-    _description = 'Modulo de requisicion de compras'
+    _description = 'Desc: Modulo de requisicion de compras'
+    _inherit = ['mail.thread']
+    # _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     logger.warning("====================================================Iniciando %s", _name)
 
     def _my_user_name(self):
         return self.env.user.id
-
+    
     name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
     responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", store=True , ondelete='set null' )
@@ -39,13 +42,12 @@ class PurchaseRequisition(models.Model):
     def create(self, values):
         if not values.get("name", False):
             sequence = self.env.ref("purchase_requisition_dg.sequence_reconcile_seq")
-            values["name"]= sequence.next_by_id()
+            values["name"] = sequence.next_by_id()
         return super(PurchaseRequisition,self).create(values)
     
     @api.multi
     def sent_email(self):
         logger.warning("====================================================status_Confirmar")
-        # self.state = "pending"
         self.ensure_one()
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
@@ -53,7 +55,9 @@ class PurchaseRequisition(models.Model):
         logger.warning("====================================================id: %s", template.id)
         logger.warning("====================================================My Contexto")
         logger.warning(self.env.context)
-        
+
+        self.state = "pending"
+
         context = dict(
             default_model='purchase.requisition',
             default_res_id=self.id,
@@ -78,6 +82,12 @@ class PurchaseRequisition(models.Model):
             'target': 'new',
             'context': context,
         }
+    
+    # @api.multi
+    # def send_mail_action(self):
+    #     # TDE/ ???
+    #     return self.send_mail()
+
 
     logger.warning("====================================================Terminado")
 
