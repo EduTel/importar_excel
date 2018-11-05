@@ -17,7 +17,6 @@ class PurchaseRequisition(models.Model):
     _name = "purchase.requisition"
     _description = 'Desc: Modulo de requisicion de compras'
     _inherit = ['mail.thread']
-    # _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     logger.warning("====================================================Iniciando %s", _name)
 
     def _my_user_name(self):
@@ -37,14 +36,9 @@ class PurchaseRequisition(models.Model):
     products = fields.One2many('require.propurchase_dg', 'purchase_id', string="Productos", help="Products", required=True , ondelete='set null')
     state = fields.Selection(_get_selection, string='Estado', default='draft')
 
-    #  logger.error(self.env.context)
     @api.one
     def get_sale_state(self):
         return dict(self._get_selection())[self.state]
-
-    #  @api.one
-    #  def status_Confirmar(self):
-    #      self.state = "pending"
 
     @api.model
     def create(self, values):
@@ -55,16 +49,13 @@ class PurchaseRequisition(models.Model):
     
     @api.multi
     def sent_email(self):
-        logger.warning("====================================================status_Confirmar")
+        logger.warning("====================================================sent_email")
         self.ensure_one()
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        self.state = "pending"
         logger.warning("====================================================id: %s", compose_form.id)
         logger.warning("====================================================id: %s", template.id)
-        logger.warning("====================================================My Contexto")
-
-        self.state = "pending"
-
         context = dict(
             default_model='purchase.requisition',
             default_res_id=self.id,
@@ -89,12 +80,6 @@ class PurchaseRequisition(models.Model):
             'target': 'new',
             'context': context,
         }
-    
-    # @api.multi
-    # def send_mail_action(self):
-    #     # TDE/ ???
-    #     return self.send_mail()
-
 
     logger.warning("====================================================Terminado")
 

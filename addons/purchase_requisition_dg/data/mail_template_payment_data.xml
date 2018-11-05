@@ -7,18 +7,9 @@
         <!--Email template -->
         <record id="mail_purchase_requisition_notification_dg" model="mail.template">
             <field name="name">Requisición Revision</field>
-            <!--
-            <field name="email_from">${object.create_uid}</field>
-            <field name="email_to">${object.responsible.email|safe}</field>
-            <field name="reply_to">${object.create_uid}</field>
-            -->
-
             <field name="email_from">${object.create_uid.email|safe}</field>
             <field name="email_to">${object.responsible.email|safe}</field>
             <field name="reply_to">${object.create_uid.email|safe}</field>
-
-
-
             <field name="subject">Requisición de compras - Revisando ${object.name}</field>
             <field name="attachment_ids">Requisición de compras - Revisando ${object.name}</field>
             <field name="model_id" ref="purchase_requisition_dg.model_purchase_requisition"/>
