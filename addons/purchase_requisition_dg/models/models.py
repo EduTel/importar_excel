@@ -22,21 +22,29 @@ class PurchaseRequisition(models.Model):
 
     def _my_user_name(self):
         return self.env.user.id
-    
+
+    def _get_selection(self):
+        return [
+            ('draft', 'Borrador'),
+            ('pending', 'Pendiente'),
+            ('approved', 'Aprobada'),
+            ('Completed', 'Completado')
+        ]
+
     name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
     responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", store=True , ondelete='set null' )
     products = fields.One2many('require.propurchase_dg', 'purchase_id', string="Productos", help="Products", required=True , ondelete='set null')
-    state = fields.Selection([
-        ('draft', 'Borrador'),
-        ('pending', 'Pendiente'),
-        ('approved', 'Aprobada'),
-        ('Completed', 'Completado')
-    ], string='Estado', default='draft')
+    state = fields.Selection(_get_selection, string='Estado', default='draft')
 
-    # @api.one
-    # def status_Confirmar(self):
-    #     self.state = "pending"
+    #  logger.error(self.env.context)
+    @api.one
+    def get_sale_state(self):
+        return dict(self._get_selection())[self.state]
+
+    #  @api.one
+    #  def status_Confirmar(self):
+    #      self.state = "pending"
 
     @api.model
     def create(self, values):
@@ -54,7 +62,6 @@ class PurchaseRequisition(models.Model):
         logger.warning("====================================================id: %s", compose_form.id)
         logger.warning("====================================================id: %s", template.id)
         logger.warning("====================================================My Contexto")
-        logger.warning(self.env.context)
 
         self.state = "pending"
 

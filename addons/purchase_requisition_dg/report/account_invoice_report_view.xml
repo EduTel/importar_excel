@@ -17,7 +17,7 @@
                     <t t-foreach="docs" t-as="o">
                         <div class="panel panel-default" style="padding: 5px;">
                             <!-- Default panel contents -->
-                            <div class="panel-heading">Requisicion </div>
+                            <div class="panel-heading">Detalle de requisicion</div>
                             <!--style="width:100%; border: 1pt solid black; border-collapse:separate; border-radius:0pt;"-->
                             <table class="table table-striped" >
                                 <tr class="active">
@@ -40,7 +40,7 @@
                             <!-- Table -->
                             <table class="table table-striped">
                                 <tr class="active">
-                                    <th>Producto</th>
+                                    <th>Cantidad</th>
                                     <th>Unidad de medida</th>
                                     <th>Descripcion</th>
                                 </tr>
