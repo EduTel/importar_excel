@@ -6,7 +6,8 @@
         "report",
         "purchase",
         'barcodes',
-        'mail'
+        'mail',
+        # 'sale_stock'
     ],
     'summary': 'Manage Purchase requisition Desiteg',
     "application": True,

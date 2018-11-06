@@ -56,7 +56,7 @@
                             % for p in object.products:
                                 <tr style="border-top-color: #ddd; border-top-width: 1px; border-top-style:solid;">
                                     <td style="padding: 5px;"> ${p.amount} </td>
-                                    <td style="padding: 5px;"> ${p.product_uom_id.name} </td>
+                                    <td style="padding: 5px;"> ${p.product_uom.name} </td>
                                     <td style="padding: 5px;"> ${p.note} </td>
                                 </tr>
                             % endfor

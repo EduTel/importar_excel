@@ -4,6 +4,7 @@ import sys
 import coloredlogs
 import logging
 from datetime import datetime
+import odoo
 from odoo import exceptions
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning, UserError, ValidationError
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 #              name = data.name
 #              result.append((data.id, name))
 #          return result
+
 
 class PurchaseRequisition(models.Model):
     """Nuevo modulo de Odoo Team"""
@@ -40,23 +42,38 @@ class PurchaseRequisition(models.Model):
             ('Completed', 'Completado')
         ]
 
+    STATES_partner_id = {
+        'approved': [('required', True)],
+        'Completed': [('required', True)]
+    }
+
     #  buyer_c = fields.Many2one('res.partner', string="Comprador", help="Buyer", default=_my_user_name, store=True , ondelete='set null' )
     name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
-    responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", store=True , ondelete='set null' )
+    responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", required=True, store=True , ondelete='set null' )
     products = fields.One2many('require.propurchase_dg', 'purchase_id', string="Productos", help="Products", required=True , ondelete='set null')
     state = fields.Selection(_get_selection, string='Estado', default='draft')
+    partner_id = fields.Many2one('res.partner', string='Vendedor', change_default=True, track_visibility='always', states=STATES_partner_id )
+
+
+    def Completado(self):
+        logger.warning("====================================================Completado")
+        self.state = "Completed"
+    
+    def Pendiente(self):
+        logger.warning("====================================================Pendiente")
+        self.state = "pending"
 
     @api.one
     def get_sale_state(self):
         return dict(self._get_selection())[self.state]
 
     @api.model
-    def create(self, values):
-        if not values.get("name", False):
+    def create(self, vals):
+        if not vals.get("name", False):
             sequence = self.env.ref("purchase_requisition_dg.sequence_reconcile_seq")
-            values["name"] = sequence.next_by_id()
-        return super(PurchaseRequisition,self).create(values)
+            vals["name"] = sequence.next_by_id()
+        return super(PurchaseRequisition,self).create(vals)
     
     @api.multi
     def send_mail_template(self):
@@ -88,7 +105,7 @@ class PurchaseRequisition(models.Model):
 
 
 
-
+    # wizard
     #  @api.multi
     #  def sent_email(self):
     #      logger.warning("====================================================sent_email")
@@ -125,12 +142,53 @@ class PurchaseRequisition(models.Model):
 
     logger.warning("====================================================Terminado")
 
-
 class ProductList(models.Model):
     _name = "require.propurchase_dg"
+    _order = 'sequence, id'
+    _inherit = ['purchase.order.line']
+
     logger.warning("====================================================Iniciando %s", _name)
-    amount = fields.Integer(string='Cantidad', size=50, required=True, index=True, store=True)
+    amount = fields.Integer(string='Cantidad', size=10, required=True, index=True, store=True, default=1 )
     note = fields.Text(string="Descripción", size=250, required=True, store=True)
-    product_uom_id = fields.Many2one('product.uom', string='Unidad de medida', help="Unidad de medida", store=True , ondelete='set null')
+    product_uom = fields.Many2one('product.uom', string='Unidad de medida', help="Unidad de medida", store=True , ondelete='set null')
     purchase_id = fields.Many2one('purchase.requisition', help="Comprador", readonly=True, required=True, store=True, ondelete='cascade')
+    product_id = fields.Many2one('product.product', string='Product', ondelete='cascade', help="Select a product")
     logger.warning("====================================================Terminado")
+    #purchase.order.line().onchange
+
+    #product_template.uom_po_id
+    #product_template.uom_id
+    # purchase.order.line().onchange(
+    @api.model
+    def create(self, vals):
+        logger.warning("====================================================create")
+        logger.error(type(vals.get("amount"))) #  generate_except_osv
+        logger.error(vals.get("amount")) #  generate_except_osv
+        if vals.get("amount") == "0":
+            logger.warning("==========es un 0")
+            #  generate_validation_error
+            # raise ValueError(vals["amount"])
+            raise UserError(_('No se permiten valores de 0 en las cantidades'))
+            #  raise UserError(_('Configuration error!\nCould not find any account to create the invoice, are you sure you have a chart of account installed?'))
+        return super(ProductList,self).create(vals)
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        logger.warning("================================onchange_product_id")
+        result = {}
+        if not self.product_id:
+            return result
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
+        self.note = self.product_id.name
+
+    @api.onchange('amount')
+    def onchange_amount(self):
+        logger.warning("================================onchange_amount")
+        logger.warning(type(self.amount))
+        logger.warning(self.amount)
+        if self.amount == 0 or self.amount <= 0:
+            logger.warning("==========es un 0")
+            self.amount = "1"
+            # return { 'warning': {'title': 'Product error', 'message':":("} }
+            # raise odoo.osv.osv.except_osv(_('Warning'), _('No se permite valor de 0'))
+            # raise UserError(_('No se permite valor de 0'))
