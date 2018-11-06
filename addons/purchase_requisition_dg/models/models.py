@@ -144,8 +144,8 @@ class PurchaseRequisition(models.Model):
 
 class ProductList(models.Model):
     _name = "require.propurchase_dg"
-    _order = 'sequence, id'
-    _inherit = ['purchase.order.line']
+    _order = 'id'
+    # _inherit = ['purchase.order.line']
 
     logger.warning("====================================================Iniciando %s", _name)
     amount = fields.Integer(string='Cantidad', size=10, required=True, index=True, store=True, default=1 )
