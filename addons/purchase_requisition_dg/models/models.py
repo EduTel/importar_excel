@@ -6,17 +6,27 @@ import logging
 from datetime import datetime
 from odoo import exceptions
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning
-
+from odoo.exceptions import Warning, UserError, ValidationError
 logger = logging.getLogger(__name__)
 
+#  class partner_inherit(models.Model):
+#      _inherit = 'res.partner'
+#  
+#      @api.multi
+#      @api.depends('name')
+#      def name_get(self):
+#          result = []
+#          for data in self:
+#              name = data.name
+#              result.append((data.id, name))
+#          return result
 
 class PurchaseRequisition(models.Model):
     """Nuevo modulo de Odoo Team"""
     coloredlogs.install(level='DEBUG')
     _name = "purchase.requisition"
     _description = 'Desc: Modulo de requisicion de compras'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.compose.message']
     logger.warning("====================================================Iniciando %s", _name)
 
     def _my_user_name(self):
@@ -30,6 +40,7 @@ class PurchaseRequisition(models.Model):
             ('Completed', 'Completado')
         ]
 
+    #  buyer_c = fields.Many2one('res.partner', string="Comprador", help="Buyer", default=_my_user_name, store=True , ondelete='set null' )
     name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
     responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", store=True , ondelete='set null' )
@@ -48,40 +59,72 @@ class PurchaseRequisition(models.Model):
         return super(PurchaseRequisition,self).create(values)
     
     @api.multi
-    def sent_email(self):
-        logger.warning("====================================================sent_email")
-        self.ensure_one()
-        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        self.state = "pending"
-        logger.warning("====================================================id: %s", compose_form.id)
-        logger.warning("====================================================id: %s", template.id)
-        context = dict(
-            default_model='purchase.requisition',
-            default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or "False",
-            default_composition_mode='comment',
-            mark_invoice_as_sent=True,
-            force_email=True,
-            # default_notify= True,
-            # show_address = True
-        )
-        logger.warning("====================================================My Contexto creado")
-        logger.warning(context)
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
-            'target': 'new',
-            'context': context,
-        }
+    def send_mail_template(self):
+        #  template_id = ir_model_data.get_object_reference('soleman_sale', 'send_sale_approval_mail')[1]
+        #  template_browse = self.env["mail.template"].browse(template_id)
+        #  values = template_browse.generate_email(self.id, fields=None)
+        #  emails = ";".join(users.mapped("email"))
+        #  logging.getLogger("Emails").info(emails)
+        #  values['email_to'] = emails
+        #  values['email_from'] = "desarrollo@desiteg.com"
+        #  values['auto_delete'] = False
+        #  values['res_id'] = False
+        #  values['subject'] = "Aprobación de Venta"
+        #  mail_id = self.env["mail.mail"].create(values)
+        #  mail_id.send()
+
+        # Find the e-mail template
+        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')
+        # You can also find the e-mail template like this:
+        # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
+        # Send out the e-mail template to the user
+        logger.warning("====================================================1 id: %s", template.id)
+        send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if send_mail:
+            self.state = "pending"
+            logger.warning("====================================================2 id: %s", send_mail)
+        else:
+            raise UserError(_('Error sending mail.'))
+
+
+
+
+    #  @api.multi
+    #  def sent_email(self):
+    #      logger.warning("====================================================sent_email")
+    #      self.ensure_one()
+    #      template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg', False)
+    #      compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+    #      self.state = "pending"
+    #      logger.warning("====================================================id: %s", compose_form.id)
+    #      logger.warning("====================================================id: %s", template.id)
+    #      context = dict(
+    #          default_model='purchase.requisition',
+    #          default_res_id=self.id,
+    #          default_use_template=bool(template),
+    #          default_template_id=template and template.id or "False",
+    #          default_composition_mode='comment',
+    #          mark_invoice_as_sent=True,
+    #          force_email=True,
+    #          # default_notify= True,
+    #          # show_address = True
+    #      )
+    #      logger.warning("====================================================My Contexto creado")
+    #      logger.warning(context)
+    #      return {
+    #          'name': _('Compose Email'),
+    #          'type': 'ir.actions.act_window',
+    #          'view_type': 'form',
+    #          'view_mode': 'form',
+    #          'res_model': 'mail.compose.message',
+    #          'views': [(compose_form.id, 'form')],
+    #          'view_id': compose_form.id,
+    #          'target': 'new',
+    #          'context': context,
+    #      }
 
     logger.warning("====================================================Terminado")
+
 
 class ProductList(models.Model):
     _name = "require.propurchase_dg"

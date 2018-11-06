@@ -23,7 +23,8 @@
         <field name="arch" type="xml">
             <form class="oe_form_configuration">
                 <header>
-                    <button string="Confirmar" name="sent_email" class="oe_highlight" type="object"/>
+                    <!--<button string="Confirmar" name="sent_email" class="oe_highlight" type="object"/>-->
+                    <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object"/>
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
                 </header>
@@ -37,9 +38,10 @@
                         <group>
                             <field name="requisition_date" options="{'datepicker':{'minDate': 0}}"/>
                             <field name="responsible" />
+                            <!--<field name="buyer_c" />-->
                         </group>
                         <group>
-
+                           
                         </group>
                     </group>
                     <separator/>
