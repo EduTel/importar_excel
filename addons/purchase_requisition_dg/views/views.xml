@@ -24,7 +24,7 @@
             <form class="oe_form_configuration">
                 <header>
                     <!--<button string="Confirmar" name="sent_email" class="oe_highlight" type="object"/>-->
-                    <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object" options="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object" states="draft"/>
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
                 </header>
