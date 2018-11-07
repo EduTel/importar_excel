@@ -23,10 +23,12 @@
         <field name="arch" type="xml">
             <form class="oe_form_configuration">
                 <header>
-                    <!--<button string="Confirmar" name="sent_email" class="oe_highlight" type="object"/>-->
-                    <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object" />
-                    <button string="Pendiente" name="Pendiente" class="oe_highlight" type="object"/>
-                    <button string="Completar" name="Completado" class="oe_highlight" type="object"/>
+                    <button string="Borrador"  name="Borrador" class="oe_highlight" type="object"/>
+
+                    <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('draft'))]}" />
+                    <button string="Aprobadar" name="Aprobadar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('pending'))]}"/>
+                    <button string="Completar" name="Completar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('approved'))]}"/>
+
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
                 </header>

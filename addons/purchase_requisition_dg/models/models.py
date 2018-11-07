@@ -27,7 +27,7 @@ class PurchaseRequisition(models.Model):
     """Nuevo modulo de Odoo Team"""
     coloredlogs.install(level='DEBUG')
     _name = "purchase.requisition_dg"
-    _description = 'Desc: Modulo de requisicion de compras'
+    _description = 'Desc: Modulo de requisicion de compras dg'
     _inherit = ['mail.thread']
     # _inherit = ['mail.thread', 'mail.compose.message']
     logger.warning("====================================================Iniciando %s", _name)
@@ -58,13 +58,17 @@ class PurchaseRequisition(models.Model):
     # partner_id = fields.Many2one('res.partner', string='Proveedor', change_default=True, track_visibility='always', states=STATES_partner_id )
 
 
-    def Completado(self):
-        logger.warning("====================================================Completado")
-        self.state = "Completed"
+    def Borrador(self):
+        logger.warning("====================================================draft")
+        self.state = "draft"
+
+    def Aprobadar(self):
+        logger.warning("====================================================approved")
+        self.state = "approved"
     
-    def Pendiente(self):
-        logger.warning("====================================================Pendiente")
-        self.state = "pending"
+    def Completar(self):
+        logger.warning("====================================================Completed")
+        self.state = "Completed"
 
     @api.one
     def get_sale_state(self):
@@ -118,7 +122,7 @@ class PurchaseRequisition(models.Model):
     #      logger.warning("====================================================id: %s", compose_form.id)
     #      logger.warning("====================================================id: %s", template.id)
     #      context = dict(
-    #          default_model='purchase.requisition',
+    #          default_model='purchase.requisition_dg',
     #          default_res_id=self.id,
     #          default_use_template=bool(template),
     #          default_template_id=template and template.id or "False",
