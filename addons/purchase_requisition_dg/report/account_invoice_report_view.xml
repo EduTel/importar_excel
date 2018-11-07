@@ -22,18 +22,26 @@
                             <table class="table table-striped" >
                                 <tr class="active">
                                     <th>Nombre</th>
-                                    <th>Fecha</th>
-                                    <th>Fecha de requerimiento</th>
+                                    <th>Proveedor</th>
                                     <th>Responsable</th>
                                     <th>Comprador</th>
-                                    <th>Estado</th>
                                 </tr>
                                 <tr>
                                     <td><t t-esc="o.name"/></td>
+                                    <td> <span t-field="o.partner_id.name"></span> </td>
+                                    <td> <span t-field="o.responsible.partner_id.name"></span> </td>
+                                    <td><t t-esc="o.write_uid.name"/></td>
+                                </tr>
+                            </table>
+                            <table class="table table-striped" >
+                                <tr class="active">
+                                    <th>Fecha de creación</th>
+                                    <th>Fecha de requerimiento</th>
+                                    <th>Estado</th>
+                                </tr>
+                                <tr>
                                     <td><t t-esc="o.create_date"/></td>
                                     <td><t t-esc="o.requisition_date"/></td>
-                                    <td> <span t-field="o.responsible.partner_id"></span> </td>
-                                    <td><t t-esc="o.write_uid.name"/></td>
                                     <td> <span t-field="o.state"></span></td>
                                 </tr>
                             </table>
@@ -41,13 +49,15 @@
                             <table class="table table-striped">
                                 <tr class="active">
                                     <th>Cantidad</th>
+                                    <th>Producto</th>
                                     <th>Unidad de medida</th>
                                     <th>Descripcion</th>
                                 </tr>
                                 <t t-foreach="o.products" t-as="p">
                                     <tr>
                                         <td><t t-esc="p.amount"/></td>
-                                        <td><span t-field="p.product_uom"></span> </td>
+                                        <td><span t-field="p.product_id.name"></span> </td>
+                                        <td><span t-field="p.product_uom.name"></span> </td>
                                         <td><t t-esc="p.note"/></td>
                                     </tr>
                                 </t>

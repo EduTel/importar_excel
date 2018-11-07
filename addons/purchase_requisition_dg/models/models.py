@@ -53,7 +53,7 @@ class PurchaseRequisition(models.Model):
     responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", required=True, store=True , ondelete='set null' )
     products = fields.One2many('require.propurchase_dg', 'purchase_id', string="Productos", help="Products", required=True , ondelete='set null')
     state = fields.Selection(_get_selection, string='Estado', default='draft')
-    partner_id = fields.Many2one('res.partner', string='Vendedor', change_default=True, track_visibility='always', states=STATES_partner_id )
+    partner_id = fields.Many2one('res.partner', string='Proveedor', change_default=True, track_visibility='always', states=STATES_partner_id )
 
 
     def Completado(self):
@@ -152,7 +152,7 @@ class ProductList(models.Model):
     note = fields.Text(string="Descripción", size=250, required=True, store=True)
     product_uom = fields.Many2one('product.uom', string='Unidad de medida', help="Unidad de medida", store=True , ondelete='set null')
     purchase_id = fields.Many2one('purchase.requisition', help="Comprador", readonly=True, required=True, store=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Product', ondelete='cascade', help="Select a product")
+    product_id = fields.Many2one('product.product', string='Producto', ondelete='cascade', help="Select a product")
     logger.warning("====================================================Terminado")
     #purchase.order.line().onchange
 

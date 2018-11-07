@@ -38,7 +38,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="requisition_date" options="{'datepicker':{'minDate': 0}}"/>
+                            <field name="requisition_date" options="{'datepicker':{'minDate': 0}}" attrs="{'readonly': [('state', 'in', ('Completed'))]}"/>
                             <field name="responsible" attrs="{'readonly': [('state', 'in', ('Completed'))]}" />
                             <field name="partner_id"  attrs="{'readonly': [('state', 'in', ('Completed'))]}" />
                         </group>
