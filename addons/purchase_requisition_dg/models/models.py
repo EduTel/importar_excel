@@ -28,7 +28,8 @@ class PurchaseRequisition(models.Model):
     coloredlogs.install(level='DEBUG')
     _name = "purchase.requisition_dg"
     _description = 'Desc: Modulo de requisicion de compras'
-    _inherit = ['mail.thread', 'mail.compose.message']
+    _inherit = ['mail.thread']
+    # _inherit = ['mail.thread', 'mail.compose.message']
     logger.warning("====================================================Iniciando %s", _name)
 
     def _my_user_name(self):
@@ -51,7 +52,7 @@ class PurchaseRequisition(models.Model):
     name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
     responsible = fields.Many2one('res.users', string="Responsable", help="Responsable", required=True, store=True , ondelete='set null' )
-    # products = fields.One2many('require.propurchase_dg', 'purchase_id',  string="Productos", help="Products", required=True , ondelete='set null')
+    products = fields.One2many('require.propurchase_dg', 'purchase_id',  string="Productos", help="Products", required=True , ondelete='set null')
     state = fields.Selection(_get_selection, string='Estado', default='draft')
     partner_id = fields.Many2one('res.partner', string='Proveedor', change_default=True, track_visibility='always', states=STATES_partner_id )
     # partner_id = fields.Many2one('res.partner', string='Proveedor', change_default=True, track_visibility='always', states=STATES_partner_id )
