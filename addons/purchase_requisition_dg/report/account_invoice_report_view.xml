@@ -3,7 +3,7 @@
     <report 
             string="Requisición de compra" 
             id="action_report_purchase_dg" 
-            model="purchase.requisition" 
+            model="purchase.requisition_dg" 
             report_type="qweb-pdf"
             name="purchase_requisition_dg.report_purchase_dg" 
             file="purchase_requisition_dg.report_purchase_dg" 

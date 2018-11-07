@@ -2,7 +2,7 @@
 <odoo>
     <record id="tree_view_id" model="ir.ui.view">
         <field name="name">___Vista Arbol___</field>
-        <field name="model">purchase.requisition</field>
+        <field name="model">purchase.requisition_dg</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="id"/>
@@ -19,7 +19,7 @@
     </record>
     <record id="form_view_id" model="ir.ui.view">
         <field name="name">___Vista Formulario___</field>
-        <field name="model">purchase.requisition</field>
+        <field name="model">purchase.requisition_dg</field>
         <field name="arch" type="xml">
             <form class="oe_form_configuration">
                 <header>
@@ -66,7 +66,7 @@
     </record>
     <record id="main_action_id" model="ir.actions.act_window">
         <field name="name">Requisicion</field>
-        <field name="res_model">purchase.requisition</field>
+        <field name="res_model">purchase.requisition_dg</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem name="Requisicion de compra" id="menu_tareas_lista" parent="account.menu_finance_payables" sequence="111" string="Mis Tareas" action="main_action_id" />
