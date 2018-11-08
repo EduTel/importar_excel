@@ -27,7 +27,7 @@
 
                     <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('draft'))]}" />
                     <button string="Aprobadar" name="Aprobadar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('pending'))]}"/>
-                    <button string="Completar" name="Completar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('approved'))]}"/>
+                    <button string="Completar" name="Completar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('approved','Completed'))]}"/>
 
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
@@ -71,5 +71,6 @@
         <field name="res_model">purchase.requisition_dg</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem name="Requisicion de compra" id="menu_tareas_lista" parent="account.menu_finance_payables" sequence="111" string="Mis Tareas" action="main_action_id" />
+    <!--<menuitem name="Requisicion de compra" id="menu_tareas_lista" parent="account.menu_finance_payables" sequence="111" string="Mis Tareas" action="main_action_id" />-->
+    <menuitem name="Requisicion de compra" id="menu_tareas_lista" parent="purchase.menu_procurement_management" sequence="111" string="Mis Tareas" action="main_action_id" />
 </odoo> 

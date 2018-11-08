@@ -66,9 +66,88 @@ class PurchaseRequisition(models.Model):
         logger.warning("====================================================approved")
         self.state = "approved"
     
+
+    # @api.multi
+    # def button_approve(self, force=False):
+    #     self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
+    #     self._create_picking()
+    #     self.filtered(
+    #         lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
+    #     return {}
+
+
     def Completar(self):
         logger.warning("====================================================Completed")
+        # {
+        #     'origin': False,
+        #     'dest_address_id': False,
+        #     'date_order': '2018-11-08 00:43:54',
+        #     'name': 'PO00019',
+        #     'order_line': [],
+        #     'picking_type_id': 1,
+        #     'notes': False,
+        #     'date_planned': '2018-12-01 00:43:57',
+        #     'company_id': 1,
+        #     'currency_id': 3,
+        #     'payment_term_id': 4,
+        #     'incoterm_id': False,
+        #     'message_follower_ids': False,
+        #     'partner_ref': False,
+        #     'partner_id': 7,
+        #     'message_ids': False,
+        #     'fiscal_position_id': False
+        # }
+        # Failing row contains (11, null, 2018-11-07 23:47:44.669688, 1, 3, 2018-11-07 23:47:44, null, null, 1, null, 1, null, 1, PO00011, null, draft, null, null, null, 2018-11-07 23:47:44.669688, null, null, null, no, null, null, null)
         self.state = "Completed"
+        vals = {
+           'partner_id': self.partner_id.id,
+           'order_line': [(0, 0, {
+                   'name': self.product_id_1.name,
+                   'product_id': self.product_id_1.id,
+                   'product_qty': 5.0,
+                   'product_uom': self.product_id_1.uom_po_id.id,
+                   'price_unit': 500.0,
+                   'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+               })],
+        };
+        self.env['purchase.order'].create(vals)
+
+        # logger.warning("====================================================button_confirm PurchaseOrder 2")
+        # for order in self:
+        #     if order.state not in ['draft', 'sent']:
+        #         continue
+        #     order._add_supplier_to_product()
+        #     # Deal with double validation process
+        #     if order.company_id.po_double_validation == 'one_step' or (order.company_id.po_double_validation == 'two_step' and order.amount_total < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id)) or order.user_has_groups('purchase.group_purchase_manager'):
+        #         order.button_approve()
+        #     else:
+        #         order.write({'state': 'to approve'})
+        # return True
+    
+    # @api.multi
+    # def _create_picking(self):
+    #     StockPicking = self.env['stock.picking']
+    #     for order in self:
+    #         if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
+    #             pickings = order.picking_ids.filtered(lambda x: x.state not in ('done','cancel'))
+    #             if not pickings:
+    #                 res = order._prepare_picking()
+    #                 picking = StockPicking.create(res)
+    #             else:
+    #                 picking = pickings[0]
+    #             moves = order.order_line._create_stock_moves(picking)
+    #             moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).action_confirm()
+    #             seq = 0
+    #             for move in sorted(moves, key=lambda move: move.date_expected):
+    #                 seq += 5
+    #                 move.sequence = seq
+    #             moves.force_assign()
+    #             picking.message_post_with_view('mail.message_origin_link',
+    #                 values={'self': picking, 'origin': order},
+    #                 subtype_id=self.env.ref('mail.mt_note').id)
+    #     return True
+
+
 
     @api.one
     def get_sale_state(self):
