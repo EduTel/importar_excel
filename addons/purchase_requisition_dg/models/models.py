@@ -117,7 +117,9 @@ class PurchaseRequisition(models.Model):
             orderline.append(order)
             vals['order_line'].append(orderline)
         logger.error(vals)
-        self.env['purchase.order'].create(vals)
+        self.state = "Completed"
+        asset =  self.env['purchase.order'].create(vals)
+        logger.error(asset)
 
     @api.one
     def get_sale_state(self):
