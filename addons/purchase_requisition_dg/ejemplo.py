@@ -17,6 +17,52 @@
     'message_ids': False,
     'fiscal_position_id': False
 }
+# camio
+{
+    'origin': False,
+    'dest_address_id': False,
+    'name': 'RFP-0001',
+    'currency_id': 3,
+    'order_line': [
+        [
+            0, False, {
+                    'name': 'Graphics Card',
+                    'product_id': 29,
+                    'product_uom': 1,
+                    'date_planned': '2018-11-07 18:40:23'
+                   }
+        ],
+        [
+            0, False, {
+                    'name': 'Little server',
+                    'product_id': 33,
+                    'product_uom': 1,
+                    'date_planned': '2018-11-07 18:40:23'
+                    }
+        ],
+        [0, False, {
+                    'name': 'desc 1',
+                    'product_id': 40,
+                    'product_uom': 1,
+                    'date_planned': '2018-11-07 18:40:23'
+                    }
+        ],
+        [0, False, {
+                    'name': 'desc 2',
+                    'product_id': 40,
+                    'product_uom': 1,
+                    'date_planned': '2018-11-07 18:40:23'
+                    }
+        ]
+    ],
+    'message_follower_ids': False,
+    'partner_id': 33,
+    'notes': False,
+    'date_order': '2018-11-07 18:40:23',
+    'date_planned': '2018-11-07 18:40:23'
+}
+
+
 
 
 {
