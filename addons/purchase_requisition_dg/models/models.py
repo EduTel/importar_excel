@@ -59,8 +59,11 @@ class PurchaseRequisition(models.Model):
 
 
     def Borrador(self):
+        logger.warning("====================================================Borrador")
         self.state = "draft"
 
+    @api.multi
+    def send_mail_template(self):
         #  template_id = ir_model_data.get_object_reference('soleman_sale', 'send_sale_approval_mail')[1]
         #  template_browse = self.env["mail.template"].browse(template_id)
         #  values = template_browse.generate_email(self.id, fields=None)
@@ -74,8 +77,31 @@ class PurchaseRequisition(models.Model):
         #  mail_id = self.env["mail.mail"].create(values)
         #  mail_id.send()
 
-        logger.warning("====================================================Borrador")
-        # self.state = "draft"
+        # Find the e-mail template
+        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')[:]
+        # You can also find the e-mail template like this:
+        # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
+        # Send out the e-mail template to the user
+
+        logger.warning("====================================================send_mail_template")
+        logger.warning("====================================================1 id: %s", template.id)
+        logger.warning(template.body_html)
+        logger.warning(self.responsible.email)
+        data_mail = { 
+                        "email_to": self.responsible.email,
+                        "body_html": u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html,
+                        "subject": u"Requisición de compras - pendiente " + self.name 
+                    }
+        send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
+        if send_mail:
+            self.state = "pending"
+            logger.warning("====================================================enviado id: %s", send_mail)
+        else:
+            raise UserError(_('Error sending mail.'))
+
+    @api.multi
+    def Aprobadar(self):
+        logger.warning("====================================================enviando correo al solicitante de la reuisicion")
         # Find the e-mail template
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')
         # You can also find the e-mail template like this:
@@ -88,29 +114,15 @@ class PurchaseRequisition(models.Model):
         #data_mail = { "email_to": self.env.user.partner_id.email }
         data_mail = { "email_to": self.create_uid.partner_id.email,
                       "body_html": u"<h3>La requisición ha sido aprovada</h3>" + template.body_html,
-                      "subject": u"Requisición de compras - Aprovada" + self.name   }
+                      "subject": u"Requisición de compras - Aprovada " + self.name   }
         send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
         if send_mail:
-            logger.warning("====================================================2 id: %s", send_mail)
+            logger.warning("====================================================enviado id: %s", send_mail)
+            self.state = "approved"
         else:
             raise UserError(_('Error sending mail.'))
-
-    def Aprobadar(self):
-        logger.warning("====================================================approved")
-        self.state = "approved"
-    
-
-    # @api.multi
-    # def button_approve(self, force=False):
-    #     self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
-    #     self._create_picking()
-    #     self.filtered(
-    #         lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
-    #     return {}
-
-
-    def Completar(self):
-        logger.warning("====================================================Completed")
+        
+        logger.warning("====================================================Creando registro en orden de compra")
         vals = {
             'origin': False,
             'dest_address_id': False,
@@ -153,6 +165,22 @@ class PurchaseRequisition(models.Model):
         # self.state = "Completed"
         asset =  self.env['purchase.order'].create(vals)
         logger.error(asset)
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'purchase.order',
+            'target': 'current',
+            'res_id': asset.id,
+            'type': 'ir.actions.act_window'
+        }
+
+    # @api.multi
+    # def button_approve(self, force=False):
+    #     self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
+    #     self._create_picking()
+    #     self.filtered(
+    #         lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
+    #     return {}
 
     @api.one
     def get_sale_state(self):
@@ -164,45 +192,6 @@ class PurchaseRequisition(models.Model):
             sequence = self.env.ref("purchase_requisition_dg.sequence_reconcile_seq")
             vals["name"] = sequence.next_by_id()
         return super(PurchaseRequisition,self).create(vals)
-    
-    @api.multi
-    def send_mail_template(self):
-        #  template_id = ir_model_data.get_object_reference('soleman_sale', 'send_sale_approval_mail')[1]
-        #  template_browse = self.env["mail.template"].browse(template_id)
-        #  values = template_browse.generate_email(self.id, fields=None)
-        #  emails = ";".join(users.mapped("email"))
-        #  logging.getLogger("Emails").info(emails)
-        #  values['email_to'] = emails
-        #  values['email_from'] = "desarrollo@desiteg.com"
-        #  values['auto_delete'] = False
-        #  values['res_id'] = False
-        #  values['subject'] = "Aprobación de Venta"
-        #  mail_id = self.env["mail.mail"].create(values)
-        #  mail_id.send()
-
-        # Find the e-mail template
-        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')[:]
-        # You can also find the e-mail template like this:
-        # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
-        # Send out the e-mail template to the user
-        
-        logger.warning("====================================================send_mail_template")
-        logger.warning("====================================================1 id: %s", template.id)
-        logger.warning(template.body_html)
-        logger.warning(self.responsible.email)
-        data_mail = { 
-                        "email_to": self.responsible.email,
-                        "body_html": u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html,
-                        "subject": u"Requisición de compras - pendiente" + self.name 
-                    }
-        send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
-        if send_mail:
-            self.state = "pending"
-            logger.warning("====================================================2 id: %s", send_mail)
-        else:
-            raise UserError(_('Error sending mail.'))
-
-
 
     # wizard
     #  @api.multi

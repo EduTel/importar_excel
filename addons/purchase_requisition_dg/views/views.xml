@@ -27,7 +27,7 @@
 
                     <button string="Confirmar" name="send_mail_template" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('draft'))]}" />
                     <button string="Aprobadar" name="Aprobadar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('pending'))]}"/>
-                    <button string="Completar" name="Completar" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('approved','Completed'))]}"/>
+                    <!--<button string="Orden de Compra" name="Ordendecompra" class="oe_highlight" type="object" attrs="{'invisible': [('state', 'not in', ('approved','Completed'))]}"/>-->
 
                     <!--<button string="Aprobar" name="purchase_Aprobar" type="object"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,Completed"/>
@@ -40,9 +40,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="requisition_date" options="{'datepicker':{'minDate': 0}}" attrs="{'readonly': [('state', 'in', ('Completed'))]}"/>
-                            <field name="responsible" attrs="{'readonly': [('state', 'in', ('Completed'))]}" />
-                            <field name="partner_id"  attrs="{'readonly': [('state', 'in', ('Completed'))]}" />
+                            <field name="requisition_date" options="{'datepicker':{'minDate': 0}}" attrs="{'readonly': [('state', 'in', ('approved','Completed'))]}"/>
+                            <field name="responsible" attrs="{'readonly': [('state', 'in', ('approved','Completed'))]}" />
+                            <field name="partner_id"  attrs="{'readonly': [('state', 'in', ('approved','Completed'))]}" />
                         </group>
                         <group>
                            
@@ -51,7 +51,7 @@
                     <separator/>
                     <notebook>
                         <page string="Productos">
-                            <field name="products" attrs="{'readonly': [('state', 'in', ('Completed'))]}" >
+                            <field name="products" attrs="{'readonly': [('state', 'in', ('approved','Completed'))]}" >
                                 <tree string="" editable="botttom" decoration-danger="('state' == 'draft')">
                                     <field name="amount" placeholder="1" required="1" />
                                     <!--context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"-->
