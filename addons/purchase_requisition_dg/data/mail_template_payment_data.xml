@@ -12,7 +12,7 @@
             <!--<field name="email_to">${object.responsible.email|safe}</field>-->
             <field name="reply_to">${object.create_uid.email|safe}</field>
             <field name="subject">Requisición de compras - Revisando ${object.name}</field>
-            <field name="attachment_ids">Requisición de compras - Revisando ${object.name}</field>
+            <!--<field name="attachment_ids">Requisición de compras - Revisando ${object.name}</field>-->
             <field name="model_id" ref="purchase_requisition_dg.model_purchase_requisition_dg"/>
             <field name="auto_delete" eval="False"/>
             <field name="report_name">Requisicion_de_compras</field>

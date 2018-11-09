@@ -21,8 +21,7 @@
         "views/views.xml",
         "report/account_invoice_report_view.xml",
         "data/sequence.xml",
-        "data/mail_template_payment_data.xml",
-        "data/mail_template_payment_data_user.xml",
+        "data/mail_template_payment_data.xml"
     ],
     "css": [
         "css/index.css"
