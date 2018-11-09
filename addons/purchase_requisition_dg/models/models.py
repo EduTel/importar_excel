@@ -81,7 +81,7 @@ class PurchaseRequisition(models.Model):
         # Send out the e-mail template to the user
         logger.warning("====================================================1 id: %s", template.id)
         logger.warning(template.body_html)
-        template.body_html = "<h3>la requisicion ha sido aprovada</h3>".template.body_html
+        template.body_html = "<h3>la requisicion ha sido aprovada</h3>" + template.body_html
         logger.warning(self.env.user.partner_id.email)
         data_mail = { "email_to": self.env.user.partner_id.email }
         send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
@@ -185,7 +185,7 @@ class PurchaseRequisition(models.Model):
         logger.warning("====================================================send_mail_template")
         logger.warning("====================================================1 id: %s", template.id)
         logger.warning(template.body_html)
-        template.body_html = "<h3>Requisicion de compra pendiente de aprobación</h3>".template.body_html
+        template.body_html = "<h3>Requisicion de compra pendiente de aprobación</h3>" + template.body_html
         logger.warning(self.responsible.email)
         data_mail = { "email_to": self.responsible.email }
         send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
