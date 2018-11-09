@@ -21,9 +21,7 @@
             <!--<field name="lang">${object.partner_id.lang}</field>-->
             <field name="body_html" >
                 <![CDATA[
-                <!--type="html" -->
                 <div>
-                    <h3>Requisicion de compra pendiente de aprobación</h3>
                     <div class="panel panel-default" style="padding: 5px;">
                         <!-- Default panel contents -->
                         <div class="panel-heading" style=" color: #333; background-color: #f5f5f5; border-color: #ddd; padding: 10px 15px;" >Detalle de requisicion</div>
