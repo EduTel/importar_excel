@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="mail_purchase_requisition_notification_inherit_dg" inherit_id="purchase_requisition_dg.mail_purchase_requisition_notification_dg">
+        <!--
+      	<xpath expr="//div[@name='payment_term']" position="after">
+        	<div class="col-xs-3" t-if="doc.incoterm" groups="sale.group_display_incoterm">
+          		<strong>Incoterms:</strong>
+          		<p t-field="doc.incoterm.code"/>
+        	</div>
+      	</xpath>
+        -->
+  	</template>
+</odoo>
