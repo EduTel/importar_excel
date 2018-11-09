@@ -87,8 +87,8 @@ class PurchaseRequisition(models.Model):
         #logger.warning(self.env.user.partner_id.email)
         #data_mail = { "email_to": self.env.user.partner_id.email }
         data_mail = { "email_to": self.create_uid.partner_id.email,
-                      "body_html": "<h3>la requisicion ha sido aprovada</h3>" + template.body_html,
-                      "attachment_ids": "Requisición de compras - Aprovada" + self.name   }
+                      "body_html": u"<h3>La requisición ha sido aprovada</h3>" + template.body_html,
+                      "subject": u"Requisición de compras - Aprovada" + self.name   }
         send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
         if send_mail:
             logger.warning("====================================================2 id: %s", send_mail)
@@ -190,9 +190,11 @@ class PurchaseRequisition(models.Model):
         logger.warning("====================================================1 id: %s", template.id)
         logger.warning(template.body_html)
         logger.warning(self.responsible.email)
-        data_mail = { "email_to": self.responsible.email,
-                      "body_html": u"<h3>Requisicion de compra pendiente de aprobación</h3>" + template.body_html,
-                      "attachment_ids": "Requisición de compras - pendiente" + self.name }
+        data_mail = { 
+                        "email_to": self.responsible.email,
+                        "body_html": u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html,
+                        "subject": u"Requisición de compras - pendiente" + self.name 
+                    }
         send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
         if send_mail:
             self.state = "pending"
