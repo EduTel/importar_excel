@@ -7,6 +7,7 @@ from datetime import datetime
 import odoo
 from odoo import exceptions
 from odoo import models, fields, api, _
+from mako.template import Template
 from odoo.exceptions import Warning, UserError, ValidationError
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ class PurchaseRequisition(models.Model):
         ]
 
     STATES_partner_id = {
+        'pending': [('required', True)],
         'approved': [('required', True)],
         'Completed': [('required', True)]
     }
@@ -76,20 +78,22 @@ class PurchaseRequisition(models.Model):
         #  values['subject'] = "Aprobación de Venta"
         #  mail_id = self.env["mail.mail"].create(values)
         #  mail_id.send()
-
+        logger.warning("====================================================(send_mail_template)")
         # Find the e-mail template
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')[:]
         # You can also find the e-mail template like this:
         # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
         # Send out the e-mail template to the user
-
-        logger.warning("====================================================send_mail_template")
         logger.warning("====================================================1 id: %s", template.id)
-        logger.warning(template.body_html)
+        body_html = Template(u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html).render(data=self.env['purchase.requisition_dg'].browse(self.id) )
+        logger.error(type(template.body_html))
+        logger.error(template.body_html)
+        logger.error(type(body_html))
+        logger.error(body_html)
         logger.warning(self.responsible.email)
-        data_mail = { 
+        data_mail = {
                         "email_to": self.responsible.email,
-                        "body_html": u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html,
+                        "body_html": body_html,
                         "subject": u"Requisición de compras - pendiente " + self.name 
                     }
         send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
@@ -101,7 +105,7 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def Aprobadar(self):
-        logger.warning("====================================================enviando correo al solicitante de la reuisicion")
+        logger.warning("====================================================(Aprobadar) enviando correo al solicitante de la requisicion")
         # Find the e-mail template
         template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')
         # You can also find the e-mail template like this:
