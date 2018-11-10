@@ -85,7 +85,10 @@ class PurchaseRequisition(models.Model):
         # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
         # Send out the e-mail template to the user
         logger.warning("====================================================1 id: %s", template.id)
-        body_html = Template(u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html).render(data=self.env['purchase.requisition_dg'].browse(self.id) )
+        registros = self.env['purchase.requisition_dg'].browse(self.id)
+        logger.warning("====================================================registros")
+        logger.warning(registros)
+        body_html = Template(u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html).render(data= registros)
         logger.error(type(template.body_html))
         logger.error(template.body_html)
         logger.error(type(body_html))
