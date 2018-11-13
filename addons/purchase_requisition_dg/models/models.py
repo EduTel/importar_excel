@@ -50,6 +50,11 @@ class PurchaseRequisition(models.Model):
         'Completed': [('required', True)]
     }
 
+    STATES_purchase_id = {
+        'approved': [('required', True)],
+        'Completed': [('required', True)]
+    }
+
     #  buyer_c = fields.Many2one('res.partner', string="Comprador", help="Buyer", default=_my_user_name, store=True , ondelete='set null' )
     name = fields.Char(string="Nombre", size=50, readonly=True, required=False, index=True, copy=False, store=True)
     requisition_date = fields.Datetime('Fecha de requerimiento', help="Date", default=fields.Datetime.now, store=True )
@@ -58,6 +63,8 @@ class PurchaseRequisition(models.Model):
     state = fields.Selection(_get_selection, string='Estado', default='draft')
     partner_id = fields.Many2one('res.partner', string='Proveedor', change_default=True, track_visibility='always', states=STATES_partner_id )
     # partner_id = fields.Many2one('res.partner', string='Proveedor', change_default=True, track_visibility='always', states=STATES_partner_id )
+    purchase_id  = fields.Many2one('purchase.order', string='Add Purchase Order', help='', states=STATES_purchase_id )
+    # purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
 
 
     def Borrador(self):
@@ -80,26 +87,22 @@ class PurchaseRequisition(models.Model):
         #  mail_id.send()
         logger.warning("====================================================(send_mail_template)")
         # Find the e-mail template
-        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')[:]
+        template_mail = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')
         # You can also find the e-mail template like this:
         # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
-        # Send out the e-mail template to the user
-        logger.warning("====================================================1 id: %s", template.id)
-        registros = self.env['purchase.requisition_dg'].browse(self.id)
+        logger.warning("====================================================1 id: %s", template_mail.id)
         logger.warning("====================================================registros")
+        registros = self.env['purchase.requisition_dg'].browse(self.id)
         logger.warning(registros)
-        body_html = Template(u"<h3>Requisición de compra pendiente de aprobación</h3>" + template.body_html).render(data= registros)
-        logger.error(type(template.body_html))
-        logger.error(template.body_html)
-        logger.error(type(body_html))
-        logger.error(body_html)
+        MailTemplate = self.env['mail.template']
+        body_html = MailTemplate.render_template(u"<h3>Requisición de compra pendiente de aprobación</h3>" + template_mail.body_html, 'purchase.requisition_dg', self.id)
         logger.warning(self.responsible.email)
         data_mail = {
                         "email_to": self.responsible.email,
                         "body_html": body_html,
                         "subject": u"Requisición de compras - pendiente " + self.name 
                     }
-        send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
+        send_mail = self.env['mail.template'].browse(template_mail.id).send_mail(self.id, email_values= data_mail)
         if send_mail:
             self.state = "pending"
             logger.warning("====================================================enviado id: %s", send_mail)
@@ -110,22 +113,22 @@ class PurchaseRequisition(models.Model):
     def Aprobadar(self):
         logger.warning("====================================================(Aprobadar) enviando correo al solicitante de la requisicion")
         # Find the e-mail template
-        template = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')
+        template_mail = self.env.ref('purchase_requisition_dg.mail_purchase_requisition_notification_dg')
         # You can also find the e-mail template like this:
         # template = self.env['ir.model.data'].get_object('mail_template_demo', 'example_email_template')
-        # Send out the e-mail template to the user
-        logger.warning("====================================================1 id: %s", template.id)
-        logger.warning(template.body_html)
+        logger.warning("====================================================1 id: %s", template_mail.id)
+        logger.warning(template_mail.body_html)
         logger.warning(self.create_uid.partner_id.email)
-        #logger.warning(self.env.user.partner_id.email)
-        #data_mail = { "email_to": self.env.user.partner_id.email }
-        data_mail = { "email_to": self.create_uid.partner_id.email,
-                      "body_html": u"<h3>La requisición ha sido aprovada</h3>" + template.body_html,
-                      "subject": u"Requisición de compras - Aprovada " + self.name   }
-        send_mail = self.env['mail.template'].browse(template.id).send_mail(self.id, email_values= data_mail)
+        MailTemplate = self.env['mail.template']
+        body_html = MailTemplate.render_template(u"<h3>La requisición ha sido aprovada</h3>" + template_mail.body_html, 'purchase.requisition_dg', self.id)
+        data_mail = { 
+                        "email_to": self.create_uid.partner_id.email,
+                        "body_html": body_html,
+                        "subject": u"Requisición de compras - Aprovada " + self.name
+                    }
+        send_mail = self.env['mail.template'].browse(template_mail.id).send_mail(self.id, email_values= data_mail)
         if send_mail:
             logger.warning("====================================================enviado id: %s", send_mail)
-            self.state = "approved"
         else:
             raise UserError(_('Error sending mail.'))
         
@@ -169,8 +172,10 @@ class PurchaseRequisition(models.Model):
             orderline.append(order)
             vals['order_line'].append(orderline)
         logger.error(vals)
-        # self.state = "Completed"
+        # creando registro en "purchase.orde"
         asset =  self.env['purchase.order'].create(vals)
+        self.purchase_id = asset.id
+        self.state = "approved"
         logger.error(asset)
         return {
             'view_type': 'form',
