@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="." position="after">
+                <xpath expr="//notebook" position="after">
                     <field name="notes" class="oe_inline" placeholder="Observaciones" modifiers="{}"/>
                 </xpath>
             </data>
         </field>
     </record>
-</odoo> 
+</odoo>

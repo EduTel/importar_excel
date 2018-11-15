@@ -17,4 +17,4 @@ class Assetadd(models.Model):
     _description = 'Agregar campo'
     _inherit = ['account.asset.asset']
     logger.warning("====================================================Iniciando %s")
-    notes = fields.Text(string="Observaciones", size=250, readonly=False, required=False, index=False, copy=True, store=True)
+    notes = fields.Text(string="Observaciones", readonly=False, required=False, index=False, copy=True, store=True)
