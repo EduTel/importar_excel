@@ -1,0 +1,11 @@
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Buyer"
+msgstr "Comprador"
+
+msgid "Products"
+msgstr "Productos"
