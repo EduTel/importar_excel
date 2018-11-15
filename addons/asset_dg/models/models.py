@@ -18,3 +18,13 @@ class Assetadd(models.Model):
     _inherit = ['account.asset.asset']
     logger.warning("====================================================Iniciando %s")
     notes = fields.Text(string="Observaciones", readonly=False, required=False, index=False, copy=True, store=True)
+
+class Partnerdd(models.Model):
+    _inherit = 'res.partner'
+
+    def _get_selection(self):
+        return [
+            ('pending', 'Pendiente'),
+            ('validated', 'Validado')
+        ]
+    state = fields.Selection(_get_selection, string='Estado', default='pending')

@@ -3,10 +3,11 @@
     "maintainer": "Desiteg",
     "depends": [
         "base",
-        "account_asset"
+        "account_asset",
+        #"account_assetpurchase"
+        #"purchase",
         #"account"
         #"report",
-        #"purchase",
         #'barcodes',
         #'mail',
         # 'sale_stock'
