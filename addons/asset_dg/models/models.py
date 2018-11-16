@@ -18,6 +18,7 @@ class Assetadd(models.Model):
     _inherit = ['account.asset.asset']
     logger.warning("====================================================Iniciando %s")
     notes = fields.Text(string="Observaciones", readonly=False, required=False, index=False, copy=True, store=True)
+    user_id = fields.Many2one('res.users', string='Asignado A', required=False, default=lambda self: self.env.user)
 
 class Partnerdd(models.Model):
     _inherit = 'res.partner'
